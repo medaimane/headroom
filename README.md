@@ -16,6 +16,7 @@ Native SwiftUI, no dependencies, no network, no telemetry. It uses about 20 MB o
 |---|---|
 | **Menu bar** | Free disk, memory pressure, swap, CPU and thermal state at a glance, with the top memory users. The icon turns into a warning when something needs attention. The ⓘ button shows the version (About Headroom). |
 | **Health** | Live charts for the last hour, plus memory and CPU grouped by what's running: iOS Simulator, Android emulator, Claude Code agents (one row per worktree), Metro, Next.js, Nx/builds/tests, Gradle, Xcode, Docker/VMs, browsers, and more. |
+| **Dev environment** | Booted simulators, running emulators, dev servers with the ports they listen on (Metro 8081, Next.js 3000, …) and agent sessions per worktree. Stop a simulator, emulator or dev server after its own confirmation, with a normal stop request; agent sessions are shown only. |
 | **Storage** | Free space against a target (100 GB by default), and the size of every known developer cache: DerivedData, DeviceSupport, Gradle, npm, Yarn, pnpm, CocoaPods, Metro, Playwright, Homebrew, … |
 | **Safe clean-up** | Pick caches, review exactly what goes and how it rebuilds, then confirm. Dry run is on until you turn it off. |
 | **Simulators & devices** | Simulator runtimes and devices, Android AVDs and system images, and Xcode archives, with size and last use. Each item is removed only after its own confirmation. |

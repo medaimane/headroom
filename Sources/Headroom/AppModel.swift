@@ -47,6 +47,13 @@ final class AppModel {
     private(set) var removingNodeModules: Set<String> = []
     var lastNodeModulesResult: NodeModulesCleanup.Result?
 
+    // Dev environment
+    private(set) var devEnvironment: DevEnvironmentSnapshot = .empty
+    private(set) var refreshingDevEnvironment = false
+    private(set) var lastDevEnvironmentRefresh: Date?
+    private(set) var stoppingItems: Set<String> = []
+    var lastStopResult: DevEnvironmentStopper.Result?
+
     // Snapshots and history
     private(set) var recording: SnapshotAccumulator?
     private(set) var snapshots: [WorkloadSnapshot] = []
@@ -289,6 +296,45 @@ final class AppModel {
             if deleted, let index = worktrees.firstIndex(where: { $0.path == info.path }) {
                 worktrees[index].nodeModulesBytes = nil
             }
+        }
+    }
+
+    // MARK: Dev environment
+
+    /// Rebuilds the Dev environment page from the latest process sample, booted simulators and listening ports.
+    func refreshDevEnvironment() {
+        guard !refreshingDevEnvironment else { return }
+        refreshingDevEnvironment = true
+        let records = processes?.records ?? []
+        Task {
+            let booted: [(udid: String, name: String, runtime: String)]
+            if let output = try? await ProcessCommandRunner().run(ToolLocator.xcrun, ["simctl", "list", "devices", "booted", "-j"], timeout: 30),
+               output.succeeded, let parsed = try? DevEnvironment.bootedSimulators(from: output.stdout) {
+                booted = parsed
+            } else {
+                booted = []
+            }
+            devEnvironment = await Task.detached(priority: .utility) { DevEnvironment.snapshot(records: records, bootedSimulators: booted) }.value
+            lastDevEnvironmentRefresh = Date()
+            refreshingDevEnvironment = false
+        }
+    }
+
+    /// Stops one simulator, emulator or dev server after the user confirmed it.
+    func stop(_ item: RunningItem) {
+        guard !stoppingItems.contains(item.id) else { return }
+        stoppingItems.insert(item.id)
+        let stopper = DevEnvironmentStopper(paths: paths, mode: effectiveMode)
+        Task {
+            let result = await stopper.stop(item)
+            stoppingItems.remove(item.id)
+            lastStopResult = result
+            record(HistoryEntry(
+                action: "\(item.stopVerb) \(item.name)" + (item.detail.isEmpty ? "" : " (\(item.detail))"),
+                detail: result.message, bytes: 0, dryRun: result.mode == .dryRun, succeeded: result.succeeded,
+                undo: result.succeeded && result.mode == .live ? item.restartHint : "Nothing was stopped."))
+            try? await Task.sleep(for: .seconds(2))
+            refreshDevEnvironment()
         }
     }
 

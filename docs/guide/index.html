@@ -51,6 +51,7 @@
         <ul>
           <li><a href="#menu-bar">Menu bar</a></li>
           <li><a href="#health">Health</a></li>
+          <li><a href="#dev-environment">Dev environment</a></li>
           <li><a href="#storage">Storage and clean-up</a></li>
           <li><a href="#devices">Simulators and devices</a></li>
           <li><a href="#explore">Explore disk</a></li>
@@ -145,6 +146,23 @@ make install              <span class="c"># optional: copies the app to ~/Applic
       <p>Processes are grouped by what you're running: iOS Simulator, Android emulator, Claude Code agents, the Claude app, Metro, Next.js, builds and tests (Nx, Jest, TypeScript, ESLint, Playwright…), other Node, Watchman, Gradle, Xcode, IDEs, Docker and VMs, browsers, and system. Agents, Metro and Next.js are split by project folder, so each worktree gets its own row.</p>
       <div class="callout"><p>To recognise Metro or Next.js, Headroom looks at a process's command line. It's used only for that and is never stored or shown. Some system processes can't be read without admin rights; Headroom counts them instead of asking for a password.</p></div>
 
+      <h2 id="dev-environment">Dev environment</h2>
+      <p>What's running for development right now, refreshed every few seconds while the page is open:</p>
+      <ul>
+        <li><strong>iOS simulators</strong> that are booted, with the memory all simulator processes use together;</li>
+        <li><strong>Android emulators</strong>, with their console port (<code>emulator-5554</code>);</li>
+        <li><strong>dev servers and the ports they listen on</strong>, such as Metro on 8081 or Next.js on 3000, with their project folder. Ports are read from your own processes with macOS's process information; Headroom reads no traffic;</li>
+        <li><strong>Claude Code agent sessions</strong>, one row per worktree.</li>
+      </ul>
+      <h3>Stopping something</h3>
+      <p>Simulators, emulators and dev servers have a <strong>Stop…</strong> (or <strong>Shut down…</strong>) button. Each needs its own confirmation, which shows what stops and how to start it again. Headroom only ever asks politely:</p>
+      <ul>
+        <li>a simulator gets <code>xcrun simctl shutdown</code>, a normal shutdown;</li>
+        <li>an emulator gets <code>adb emu kill</code> when the Android SDK's <code>adb</code> is installed, otherwise a normal stop request;</li>
+        <li>a dev server gets a normal stop request (SIGTERM), so it can clean up.</li>
+      </ul>
+      <p>It never force-quits, never stops other users' or macOS processes, and checks right before stopping that the process is still the same one (a new process that reused the ID is never touched). <strong>Agent sessions are shown but can't be stopped from Headroom</strong>, so no agent loses work; stop one from its own terminal. Every stop is recorded in History, and dry run applies.</p>
+
       <h2 id="storage">Storage and clean-up</h2>
       <p>The Storage page shows free space against your target (100 GB by default) and the size of every location in the <a href="#caches">cache catalog</a>. Locations marked <em>info only</em> (Trash, Logs, all app caches, Claude Code data) are shown so you know where space goes, but Headroom never cleans them.</p>
       <h3>How a clean-up works</h3>
@@ -224,6 +242,7 @@ make install              <span class="c"># optional: copies the app to ~/Applic
       <p><code>headroom-cli</code> prints the same reports as the app. It's read-only: even <code>plan</code> is a dry run.</p>
 <pre><code>swift run headroom-cli health       <span class="c"># memory, swap, CPU, thermal state, disk</span>
 swift run headroom-cli processes    <span class="c"># memory and CPU grouped by what's running</span>
+swift run headroom-cli dev          <span class="c"># simulators, emulators, dev servers with ports, agents</span>
 swift run headroom-cli storage      <span class="c"># sizes of the known cache locations</span>
 swift run headroom-cli devices      <span class="c"># runtimes, simulators, AVDs, system images, archives</span>
 swift run headroom-cli worktrees    <span class="c"># branch and push status of every worktree</span>
@@ -241,7 +260,7 @@ swift run headroom-cli plan npm.cache gradle.caches   <span class="c"># what a c
         <li><strong>Running tools win.</strong> A cache is skipped while the tool that uses it is running.</li>
         <li><strong>Per-item confirmation</strong> for simulators, AVDs, system images and archives. Docker data is shown only.</li>
         <li><strong>Git is read-only.</strong> It never fetches, commits, changes branches or removes worktrees.</li>
-        <li><strong>Processes are never stopped.</strong> Headroom reports on agents, simulators, emulators and dev servers; it doesn't quit them.</li>
+        <li><strong>Processes stop only when you confirm.</strong> Simulators, emulators and dev servers can be stopped one at a time after a confirmation, with a normal stop request, never a force-quit, and only if it's still the same process. Agent sessions are never stopped by Headroom.</li>
         <li><strong>Security settings are never touched</strong>: SIP, Gatekeeper, FileVault, the firewall, XProtect and updates. There's no hidden sudo.</li>
         <li><strong>Debug builds can't delete on your Mac.</strong> They force dry run unless pointed at a fixture home in a temporary folder with <code>HEADROOM_HOME</code>.</li>
       </ul>

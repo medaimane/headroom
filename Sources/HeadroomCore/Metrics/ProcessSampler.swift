@@ -13,9 +13,13 @@ public struct ProcessRecord: Sendable, Identifiable, Hashable {
     public var cpu: Double
     /// Working folder, captured only for agents and dev servers to group them by worktree.
     public var workingDirectory: String?
+    /// When the process started (mach absolute time). With the pid, it identifies this exact process,
+    /// so a stop request can't hit a different process that later reuses the pid.
+    public var startTime: UInt64
 
-    public init(pid: pid_t, name: String, category: ProcessCategory, memory: UInt64, cpu: Double, workingDirectory: String? = nil) {
+    public init(pid: pid_t, name: String, category: ProcessCategory, memory: UInt64, cpu: Double, workingDirectory: String? = nil, startTime: UInt64 = 0) {
         self.pid = pid
+        self.startTime = startTime
         self.name = name
         self.category = category
         self.memory = memory
@@ -132,7 +136,8 @@ public final class ProcessSampler: @unchecked Sendable {
             }
             nextCPU[pid] = (cpuTime, now)
 
-            records.append(ProcessRecord(pid: pid, name: identity.name, category: identity.category, memory: usage.ri_phys_footprint, cpu: cpu, workingDirectory: identity.workingDirectory))
+            records.append(ProcessRecord(pid: pid, name: identity.name, category: identity.category, memory: usage.ri_phys_footprint, cpu: cpu,
+                                         workingDirectory: identity.workingDirectory, startTime: usage.ri_proc_start_abstime))
         }
 
         cache = cache.filter { seenKeys.contains($0.key) }
@@ -159,6 +164,8 @@ public final class ProcessSampler: @unchecked Sendable {
         guard count > 0 else { return [] }
         return pids.prefix(Int(count)).filter { $0 > 0 }
     }
+
+    public static func startTime(of pid: pid_t) -> UInt64? { rusage(pid)?.ri_proc_start_abstime }
 
     static func rusage(_ pid: pid_t) -> rusage_info_v4? {
         var info = rusage_info_v4()
@@ -208,7 +215,7 @@ public final class ProcessSampler: @unchecked Sendable {
         return args
     }
 
-    static func workingDirectory(_ pid: pid_t) -> String? {
+    public static func workingDirectory(_ pid: pid_t) -> String? {
         var info = proc_vnodepathinfo()
         let size = Int32(MemoryLayout<proc_vnodepathinfo>.size)
         guard proc_pidinfo(pid, PROC_PIDVNODEPATHINFO, 0, &info, size) == size else { return nil }
