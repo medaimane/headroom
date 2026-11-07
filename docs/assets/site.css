@@ -291,17 +291,5 @@ th { font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.05em; color
 tr:last-child td { border-bottom: 0; }
 td code { white-space: nowrap; }
 
-/* Brand swatches */
-.swatches { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); margin-bottom: 1.4em; }
-.swatch { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); font-size: 13.5px; }
-.swatch i { display: block; height: 64px; }
-.swatch div { padding: 8px 10px; }
-.swatch b { display: block; color: var(--ink); }
-.swatch code { background: none; border: 0; padding: 0; color: var(--ink-3); }
-.logo-row { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 1.4em; }
-.logo-box { border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: grid; place-items: center; min-width: 140px; min-height: 120px; background: var(--surface); }
-.logo-box.dark { background: #0a111f; color: #e8eef8; }
-.logo-box.light { background: #ffffff; color: #0f1a2c; }
-
 :focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; border-radius: 6px; }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }

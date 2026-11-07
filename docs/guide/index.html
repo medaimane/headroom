@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Headroom Guide</title>
-  <meta name="description" content="How to install and use Headroom: live health, storage and safe clean-ups, simulators and devices, worktrees, snapshots, the CLI, the safety model and the brand.">
+  <meta name="description" content="How to install and use Headroom: live health, storage and safe clean-ups, simulators and devices, worktrees, snapshots, the CLI and the safety model.">
   <meta name="theme-color" content="#0a111f">
   <link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../assets/site.css">
@@ -58,7 +58,6 @@
           <li><a href="#uninstall">Uninstall</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="#contributing">Contributing and releasing</a></li>
-          <li><a href="#brand">Brand</a></li>
         </ul>
       </details>
     </aside>
@@ -288,7 +287,7 @@ swift run headroom-cli plan npm.cache gradle.caches   <span class="c"># what a c
 Sources/Headroom         <span class="c"># SwiftUI app: menu bar, window, settings</span>
 Sources/headroom-cli     <span class="c"># read-only reports</span>
 Tests/HeadroomCoreTests  <span class="c"># Swift Testing; clean-ups run only against fixtures in $TMPDIR</span>
-docs/                    <span class="c"># this website (GitHub Pages), logo and brand assets</span></code></pre>
+docs/                    <span class="c"># this website (GitHub Pages) and its assets</span></code></pre>
       <p>New cache locations go in <code>StorageCatalog.swift</code> with a rebuild note and the processes that should block cleaning. Please add a test for any new rule. Never run live clean-ups on your own Mac while developing; use a fixture home or dry run.</p>
       <h3 id="releasing">Releasing</h3>
       <p>The website is published from <code>main</code> and always describes the latest release, so docs for a new feature land together with the release that ships it.</p>
@@ -300,40 +299,6 @@ docs/                    <span class="c"># this website (GitHub Pages), logo and
         <li>Commit, create a signed tag <code>vX.Y.Z</code>, push both, then create the GitHub release and attach <code>build/Headroom.zip</code>, keeping that exact file name.</li>
       </ol>
 
-      <h2 id="brand">Brand</h2>
-      <p>The mark is three usage bars that all stop below a ceiling. The space between them and the ceiling is the headroom: what you have left to work with.</p>
-      <div class="logo-row">
-        <div class="logo-box"><img src="../assets/icon.svg" alt="Headroom app icon" width="96" height="96"></div>
-        <div class="logo-box"><img src="../assets/mark.svg" alt="Headroom mark" width="56" height="56"></div>
-        <div class="logo-box light"><img src="../assets/mark-mono.svg" alt="One-colour mark" width="48" height="48"></div>
-        <div class="logo-box light"><img src="../assets/logo.svg" alt="Headroom logo" width="220" height="47"></div>
-      </div>
-      <div class="table-wrap"><table>
-        <thead><tr><th>File</th><th>Use it for</th></tr></thead>
-        <tbody>
-          <tr><td><a href="../assets/icon.svg"><code>icon.svg</code></a></td><td>App icon source (macOS grid, 1024 px canvas). <code>make icon</code> renders it to <code>Resources/AppIcon.icns</code>.</td></tr>
-          <tr><td><a href="../assets/mark.svg"><code>mark.svg</code></a></td><td>Favicon, avatars, small placements. Full-bleed tile.</td></tr>
-          <tr><td><a href="../assets/mark-mono.svg"><code>mark-mono.svg</code></a></td><td>One-colour mark (<code>currentColor</code>) for print, menu bar templates and tiny sizes.</td></tr>
-          <tr><td><a href="../assets/logo.svg"><code>logo.svg</code></a></td><td>Mark with wordmark, on light backgrounds.</td></tr>
-        </tbody>
-      </table></div>
-      <h3>Colours</h3>
-      <div class="swatches">
-        <div class="swatch"><i style="background:#0a111f"></i><div><b>Night</b><code>#0A111F</code></div></div>
-        <div class="swatch"><i style="background:#1c2b47"></i><div><b>Dusk</b><code>#1C2B47</code></div></div>
-        <div class="swatch"><i style="background:#3ddc97"></i><div><b>Headroom mint</b><code>#3DDC97</code></div></div>
-        <div class="swatch"><i style="background:#12a571"></i><div><b>Mint on light</b><code>#12A571</code></div></div>
-        <div class="swatch"><i style="background:#7dd3fc"></i><div><b>Sky</b><code>#7DD3FC</code></div></div>
-        <div class="swatch"><i style="background:#e8f1ff"></i><div><b>Ceiling</b><code>#E8F1FF</code></div></div>
-        <div class="swatch"><i style="background:#f5b53d"></i><div><b>Warning</b><code>#F5B53D</code></div></div>
-        <div class="swatch"><i style="background:#f0605d"></i><div><b>Critical</b><code>#F0605D</code></div></div>
-      </div>
-      <h3>Type and voice</h3>
-      <ul>
-        <li><strong>Type:</strong> the system font (SF Pro on Apple platforms), bold and slightly tight for headings. SF Mono for code.</li>
-        <li><strong>Voice:</strong> plain, calm and specific. Say what happens, how big it is and how to undo it. No scare words, no "boost" or "optimize".</li>
-        <li><strong>Mark usage:</strong> keep clear space of a quarter of the mark's width around it. Don't recolour the bars red or amber; status colours belong to the app's indicators, not the logo.</li>
-      </ul>
     </main>
   </div>
 

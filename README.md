@@ -79,7 +79,7 @@ Sources/HeadroomCore   logic, no UI: metrics, process grouping, storage catalog,
 Sources/Headroom       SwiftUI app: menu bar, window, settings
 Sources/headroom-cli   read-only command-line reports
 Tests/HeadroomCoreTests  Swift Testing; clean-ups run only against fixture folders in $TMPDIR
-docs/                  website (GitHub Pages): landing page, guide, logo and brand assets
+docs/                  website (GitHub Pages): landing page, guide and assets
 scripts/               app bundle and icon build scripts
 ```
 
@@ -97,10 +97,6 @@ scripts/               app bundle and icon build scripts
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md). Release steps are in the [guide](https://medaimane.github.io/headroom/guide/#releasing).
-
-## Brand
-
-The mark is three usage bars that stop below a ceiling; the gap is the headroom. Logo files, colours and usage notes are in [`docs/assets/`](docs/assets/) and the [brand section of the guide](https://medaimane.github.io/headroom/guide/#brand).
 
 ## License
 
