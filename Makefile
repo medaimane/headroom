@@ -1,4 +1,4 @@
-.PHONY: app debug-app test cli install clean
+.PHONY: app debug-app icon site test cli install clean
 
 # Build build/Headroom.app (release, ad-hoc signed).
 app:
@@ -7,6 +7,14 @@ app:
 # Debug build: clean-ups are always a dry run.
 debug-app:
 	scripts/make-app.sh debug
+
+# Re-render Resources/AppIcon.icns from docs/assets/icon.svg after changing the logo.
+icon:
+	swift scripts/make-icon.swift
+
+# Serve the landing page and guide at http://localhost:8765
+site:
+	cd docs && python3 -m http.server 8765
 
 test:
 	swift test

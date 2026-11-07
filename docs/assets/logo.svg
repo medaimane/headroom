@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 64">
+  <title>Headroom</title>
+  <defs>
+    <linearGradient id="hl-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1C2B47"/>
+      <stop offset="1" stop-color="#0A111F"/>
+    </linearGradient>
+    <linearGradient id="hl-bar" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#14A673"/>
+      <stop offset="1" stop-color="#5CF0B2"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14.4" fill="url(#hl-bg)"/>
+  <line x1="14" y1="17" x2="50" y2="17" stroke="#E8F1FF" stroke-width="3.6" stroke-linecap="round"/>
+  <rect x="14" y="36" width="9" height="14" rx="2.4" fill="url(#hl-bar)"/>
+  <rect x="27.5" y="29" width="9" height="21" rx="2.4" fill="url(#hl-bar)"/>
+  <rect x="41" y="23" width="9" height="27" rx="2.4" fill="url(#hl-bar)"/>
+  <!-- Wordmark set in the system font (SF Pro on Apple platforms). -->
+  <text x="80" y="44" fill="#0F1A2C" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="36" font-weight="700" letter-spacing="-0.8">Headroom</text>
+</svg>

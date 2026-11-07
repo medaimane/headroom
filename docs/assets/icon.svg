@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <title>Headroom app icon</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1C2B47"/>
+      <stop offset="1" stop-color="#0A111F"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#14A673"/>
+      <stop offset="1" stop-color="#5CF0B2"/>
+    </linearGradient>
+    <linearGradient id="room" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7DD3FC" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#7DD3FC" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.10"/>
+      <stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- macOS icon grid: 824 × 824 tile centred on a 1024 canvas -->
+  <rect x="100" y="100" width="824" height="824" rx="185" fill="url(#bg)"/>
+  <rect x="100" y="100" width="824" height="824" rx="185" fill="url(#shine)"/>
+  <rect x="102" y="102" width="820" height="820" rx="183" fill="none" stroke="#FFFFFF" stroke-opacity="0.09" stroke-width="4"/>
+  <!-- the headroom: free space under the ceiling -->
+  <rect x="232" y="314" width="560" height="190" fill="url(#room)"/>
+  <!-- ceiling -->
+  <line x1="232" y1="300" x2="792" y2="300" stroke="#E8F1FF" stroke-width="28" stroke-linecap="round"/>
+  <!-- usage bars, all below the ceiling -->
+  <rect x="232" y="572" width="136" height="220" rx="36" fill="url(#bar)"/>
+  <rect x="444" y="462" width="136" height="330" rx="36" fill="url(#bar)"/>
+  <rect x="656" y="372" width="136" height="420" rx="36" fill="url(#bar)"/>
+</svg>

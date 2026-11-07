@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Headroom Guide</title>
+  <meta name="description" content="How to install and use Headroom: live health, storage and safe clean-ups, simulators and devices, worktrees, snapshots, the CLI, the safety model and the brand.">
+  <meta name="theme-color" content="#0a111f">
+  <link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="../"><img src="../assets/mark.svg" alt="">Headroom</a>
+      <nav class="nav" aria-label="Main">
+        <a class="hide-sm" href="../#features">Features</a>
+        <a href="./" aria-current="page">Guide</a>
+        <a href="https://github.com/medaimane/headroom">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap doc">
+    <aside class="toc" aria-label="On this page">
+      <details>
+        <summary>On this page</summary>
+        <p>Start</p>
+        <ul>
+          <li><a href="#install">Install</a></li>
+          <li><a href="#first-run">First run</a></li>
+        </ul>
+        <p>Using Headroom</p>
+        <ul>
+          <li><a href="#menu-bar">Menu bar</a></li>
+          <li><a href="#health">Health</a></li>
+          <li><a href="#storage">Storage and clean-up</a></li>
+          <li><a href="#devices">Simulators and devices</a></li>
+          <li><a href="#explore">Explore disk</a></li>
+          <li><a href="#worktrees">Worktrees</a></li>
+          <li><a href="#snapshots">Workload snapshots</a></li>
+          <li><a href="#history">History</a></li>
+          <li><a href="#settings">Warnings and settings</a></li>
+          <li><a href="#cli">Command line</a></li>
+        </ul>
+        <p>Reference</p>
+        <ul>
+          <li><a href="#safety">Safety model</a></li>
+          <li><a href="#caches">Cache catalog</a></li>
+          <li><a href="#privacy">Permissions and privacy</a></li>
+          <li><a href="#uninstall">Uninstall</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contributing">Contributing</a></li>
+          <li><a href="#brand">Brand</a></li>
+        </ul>
+      </details>
+    </aside>
+
+    <main class="prose">
+      <h1>Headroom guide</h1>
+      <p>Headroom is a menu bar app for macOS 14 and later. It reports freely and changes nothing until you review and confirm. This guide covers installing it, every part of the app, and the rules it follows.</p>
+
+      <h2 id="install">Install</h2>
+      <p>You need macOS 14 or later and Xcode 16 or later (for Swift 6). There are no other dependencies.</p>
+<pre><code>git clone https://github.com/medaimane/headroom.git
+cd headroom
+make app                  <span class="c"># builds build/Headroom.app (release, signed to run locally)</span>
+open build/Headroom.app
+make install              <span class="c"># optional: copies the app to ~/Applications</span></code></pre>
+      <p>The app is signed ad hoc ("Sign to Run Locally"), so it runs on the Mac that built it. Sharing a build with other Macs would need a Developer ID signature and notarization.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>make app</code></td><td>Release build of <code>build/Headroom.app</code>.</td></tr>
+          <tr><td><code>make debug-app</code></td><td>Debug build. Clean-ups are always a dry run on your real home folder.</td></tr>
+          <tr><td><code>make test</code></td><td>Runs the unit tests. Clean-up tests only touch fixture folders in <code>$TMPDIR</code>.</td></tr>
+          <tr><td><code>make cli ARGS=storage</code></td><td>Runs a read-only command-line report.</td></tr>
+          <tr><td><code>make install</code></td><td>Copies the app to <code>~/Applications</code>.</td></tr>
+          <tr><td><code>make icon</code></td><td>Re-renders the app icon from <code>docs/assets/icon.svg</code>.</td></tr>
+          <tr><td><code>make site</code></td><td>Serves this website locally at <code>http://localhost:8765</code>.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h2 id="first-run">First run</h2>
+      <ol>
+        <li>Open Headroom. It has no Dock icon; look for the bars icon in the menu bar. On a crowded menu bar it can hide behind the notch.</li>
+        <li>Click it for the quick view, then <strong>Open Headroom</strong> for the full window.</li>
+        <li>Go to <strong>Storage</strong>. The first visit scans your developer caches; <strong>Rescan</strong> refreshes them.</li>
+        <li>Pick some caches and click <strong>Review clean-up…</strong>. Dry run is on, so the first run only simulates.</li>
+        <li>When you trust what you see, turn off dry run in <strong>Settings ▸ Clean-up</strong>. Every clean-up still needs your confirmation.</li>
+      </ol>
+
+      <h2 id="menu-bar">Menu bar</h2>
+      <p>The menu bar icon shows the overall state. It turns into a warning when disk, memory pressure, swap or temperature needs attention, and it shows free disk space when disk is the problem. The quick view has free disk, memory pressure, swap, CPU and thermal state, plus the groups using the most memory.</p>
+
+      <h2 id="health">Health</h2>
+      <p>Headroom samples the system every 5 seconds (you can change this) and keeps an hour of charts.</p>
+      <ul>
+        <li><strong>Memory pressure</strong> is the signal macOS itself uses. "Used memory" alone is misleading, because macOS fills spare memory with caches on purpose.</li>
+        <li><strong>Swap</strong> growing while you work means memory is short: something is being pushed to disk.</li>
+        <li><strong>Thermal state</strong> shows when the Mac is slowing itself down to cool off.</li>
+        <li><strong>Disk free</strong> is shown with and without purgeable space.</li>
+      </ul>
+      <h3>Grouped processes</h3>
+      <p>Processes are grouped by what you're running: iOS Simulator, Android emulator, Claude Code agents, the Claude app, Metro, Next.js, builds and tests (Nx, Jest, TypeScript, ESLint, Playwright…), other Node, Watchman, Gradle, Xcode, IDEs, Docker and VMs, browsers, and system. Agents, Metro and Next.js are split by project folder, so each worktree gets its own row.</p>
+      <div class="callout"><p>To recognise Metro or Next.js, Headroom looks at a process's command line. It's used only for that and is never stored or shown. Some system processes can't be read without admin rights; Headroom counts them instead of asking for a password.</p></div>
+
+      <h2 id="storage">Storage and clean-up</h2>
+      <p>The Storage page shows free space against your target (100 GB by default) and the size of every location in the <a href="#caches">cache catalog</a>. Locations marked <em>info only</em> (Trash, Logs, all app caches, Claude Code data) are shown so you know where space goes, but Headroom never cleans them.</p>
+      <h3>How a clean-up works</h3>
+      <ol>
+        <li><strong>Pick</strong> one or more caches.</li>
+        <li><strong>Review</strong>: Headroom builds a plan that lists each folder, its size and how it rebuilds. Caches whose tool is running are skipped with the reason (for example DerivedData while <code>xcodebuild</code> runs, or Metro's cache while Metro runs).</li>
+        <li><strong>Confirm</strong>: each target is checked again right before it's removed. Anything that changed in between is skipped.</li>
+        <li><strong>Record</strong>: the result goes into <a href="#history">History</a> with how to undo it.</li>
+      </ol>
+      <div class="callout warn"><p><strong>Cache clean-ups can't be undone</strong>, but the tools rebuild them. The cost is time: the next Xcode build is a full build, the next Gradle or npm install downloads again, and so on. The review screen says exactly what to expect.</p></div>
+      <h3>Docker</h3>
+      <p>If Docker is installed and running, Headroom shows images, containers, volumes and build cache with what's reclaimable. Docker data is shown only; clean it with Docker's own tools.</p>
+
+      <h2 id="devices">Simulators and devices</h2>
+      <p>These are bigger than caches and not rebuilt for you, so each one is removed only after its own confirmation.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Item</th><th>How it's removed</th><th>How to get it back</th></tr></thead>
+        <tbody>
+          <tr><td>Simulator runtime</td><td><code>xcrun simctl runtime delete</code></td><td>Download it again in Xcode ▸ Settings ▸ Components.</td></tr>
+          <tr><td>Simulator device</td><td><code>xcrun simctl delete</code>, including its apps and data</td><td>Create it again in Xcode ▸ Devices and Simulators.</td></tr>
+          <tr><td>Android AVD</td><td>Moved to the Trash (the <code>.avd</code> folder and its <code>.ini</code>)</td><td>Put it back from the Trash.</td></tr>
+          <tr><td>Android system image</td><td>Moved to the Trash</td><td>Put it back, or reinstall in Android Studio ▸ SDK Manager.</td></tr>
+          <tr><td>Xcode archive</td><td>Moved to the Trash</td><td>Put it back. Archives hold the dSYMs for crash reports of shipped builds.</td></tr>
+        </tbody>
+      </table></div>
+      <p>A running simulator can't be deleted, and AVDs can't be removed while an Android emulator runs. Simulator devices whose runtime is missing are flagged, because they can't boot anyway. AVD settings files are never opened; AVDs are listed by folder name and size.</p>
+
+      <h2 id="explore">Explore disk</h2>
+      <p>A read-only, size-sorted drill-down of your home folder. Use it to find what the catalog doesn't cover. Explore never deletes anything; use <strong>Show in Finder</strong> if you decide to act on something yourself.</p>
+
+      <h2 id="worktrees">Worktrees</h2>
+      <p>Headroom finds every git repository under the folders you choose (<code>~/Developer</code> by default) and lists each worktree with:</p>
+      <ul>
+        <li>branch, upstream and last commit date,</li>
+        <li>the number of uncommitted changes (file names are never kept),</li>
+        <li>commits not on any remote branch,</li>
+        <li><code>node_modules</code> and Nx cache size, filled in after the git pass.</li>
+      </ul>
+      <p>Git runs with <code>--no-optional-locks</code> and never fetches, commits or changes branches, so push status is as of your last fetch. The page is read-only: it shows the facts and you decide what to do with old worktrees.</p>
+
+      <h2 id="snapshots">Workload snapshots</h2>
+      <p>Name a workload (for example "1 sim + 1 emu + Metro + Next + 2 agents"), click <strong>Start recording</strong>, work as usual, then <strong>Stop and save</strong>. Headroom keeps the peaks: memory used, worst memory pressure, swap growth, CPU, thermal state, and how many devices and agent sessions were running. Over time this tells you what your Mac can carry before it starts swapping.</p>
+
+      <h2 id="history">History</h2>
+      <p>Every action, including dry runs, is recorded with when it ran, what it touched, its size, whether it worked and how to undo it. Export the history as Markdown from the History page.</p>
+
+      <h2 id="settings">Warnings and settings</h2>
+      <p>Warnings arrive as macOS notifications. Each kind waits 30 minutes before repeating, and memory pressure has to last before it counts.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Setting</th><th>Default</th></tr></thead>
+        <tbody>
+          <tr><td>Disk warning below</td><td>60 GB free</td></tr>
+          <tr><td>Disk critical below</td><td>25 GB free</td></tr>
+          <tr><td>Free-space target</td><td>100 GB</td></tr>
+          <tr><td>Swap warning / critical</td><td>4 GB / 8 GB</td></tr>
+          <tr><td>Memory pressure must last</td><td>2 minutes</td></tr>
+          <tr><td>Sample interval</td><td>5 seconds</td></tr>
+          <tr><td>Notifications</td><td>On</td></tr>
+          <tr><td>Dry run</td><td>On</td></tr>
+          <tr><td>Worktree folders</td><td><code>Developer</code> (relative to home)</td></tr>
+          <tr><td>Open at login</td><td>Off</td></tr>
+        </tbody>
+      </table></div>
+
+      <h2 id="cli">Command line</h2>
+      <p><code>headroom-cli</code> prints the same reports as the app. It's read-only: even <code>plan</code> is a dry run.</p>
+<pre><code>swift run headroom-cli health       <span class="c"># memory, swap, CPU, thermal state, disk</span>
+swift run headroom-cli processes    <span class="c"># memory and CPU grouped by what's running</span>
+swift run headroom-cli storage      <span class="c"># sizes of the known cache locations</span>
+swift run headroom-cli devices      <span class="c"># runtimes, simulators, AVDs, system images, archives</span>
+swift run headroom-cli worktrees    <span class="c"># branch and push status of every worktree</span>
+swift run headroom-cli plan npm.cache gradle.caches   <span class="c"># what a clean-up would remove</span></code></pre>
+      <p>Cache ids for <code>plan</code> are listed in the <a href="#caches">cache catalog</a>. With no ids, <code>plan</code> covers every cleanable cache.</p>
+
+      <h2 id="safety">Safety model</h2>
+      <p>These rules are enforced in code (<code>PathGuard</code>, the planner and the executors) and covered by tests.</p>
+      <ul>
+        <li><strong>Nothing is deleted without your click</strong>, and nothing is deleted automatically.</li>
+        <li><strong>Allow-list only.</strong> A target must be strictly inside a catalog folder. Paths with <code>..</code> are rejected, and a catalog folder that is itself a symlink pointing elsewhere is refused. Symlinks inside are removed as links, never followed.</li>
+        <li><strong>Checked twice:</strong> when the plan is made and again right before each removal.</li>
+        <li><strong>Your work is protected.</strong> Nothing inside a git working tree, nothing named <code>.env*.local</code>, and no folder that contains one.</li>
+        <li><strong>Running tools win.</strong> A cache is skipped while the tool that uses it is running.</li>
+        <li><strong>Per-item confirmation</strong> for simulators, AVDs, system images and archives. Docker data is shown only.</li>
+        <li><strong>Repositories are read-only.</strong></li>
+        <li><strong>Processes are never stopped.</strong> Headroom reports on agents, simulators, emulators and dev servers; it doesn't quit them.</li>
+        <li><strong>Security settings are never touched</strong>: SIP, Gatekeeper, FileVault, the firewall, XProtect and updates. There's no hidden sudo.</li>
+        <li><strong>Debug builds can't delete on your Mac.</strong> They force dry run unless pointed at a fixture home in a temporary folder with <code>HEADROOM_HOME</code>.</li>
+      </ul>
+
+      <h2 id="caches">Cache catalog</h2>
+      <p>The only locations Headroom will ever clean. Paths are relative to your home folder unless noted.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Id</th><th>Cache</th><th>Location</th><th>After cleaning</th></tr></thead>
+        <tbody>
+          <tr><td><code>xcode.derivedData</code></td><td>Xcode DerivedData</td><td><code>Library/Developer/Xcode/DerivedData</code></td><td>Next build of each project is a full build; Swift packages are fetched again.</td></tr>
+          <tr><td><code>xcode.deviceSupport</code></td><td>iOS DeviceSupport</td><td><code>Library/Developer/Xcode/iOS DeviceSupport</code></td><td>Symbols are copied again when you next connect a device.</td></tr>
+          <tr><td><code>xcode.cache</code></td><td>Xcode caches</td><td><code>Library/Caches/com.apple.dt.Xcode</code></td><td>Recreated as you work.</td></tr>
+          <tr><td><code>xcode.previews</code></td><td>SwiftUI Previews data</td><td><code>Library/Developer/Xcode/UserData/Previews</code></td><td>Rebuilt when you next open a preview.</td></tr>
+          <tr><td><code>swiftpm.cache</code></td><td>Swift Package Manager cache</td><td><code>Library/Caches/org.swift.swiftpm</code></td><td>Downloaded again on the next resolve.</td></tr>
+          <tr><td><code>simulator.caches</code></td><td>Simulator caches</td><td><code>Library/Developer/CoreSimulator/Caches</code></td><td>Rebuilt on the next boot; that boot is slower.</td></tr>
+          <tr><td><code>gradle.caches</code></td><td>Gradle caches</td><td><code>.gradle/caches</code></td><td>Dependencies download again on the next build.</td></tr>
+          <tr><td><code>gradle.wrapper</code></td><td>Gradle wrapper downloads</td><td><code>.gradle/wrapper/dists</code></td><td>Each project's Gradle downloads again.</td></tr>
+          <tr><td><code>android.cache</code></td><td>Android build cache</td><td><code>.android/cache</code></td><td>Recreated on the next build.</td></tr>
+          <tr><td><code>npm.cache</code></td><td>npm cache</td><td><code>.npm/_cacache</code></td><td>Packages download again on install.</td></tr>
+          <tr><td><code>yarn.classic</code></td><td>Yarn cache (v1)</td><td><code>Library/Caches/Yarn</code></td><td>Packages download again on install.</td></tr>
+          <tr><td><code>yarn.berry</code></td><td>Yarn cache (Berry)</td><td><code>.yarn/berry/cache</code></td><td>Packages download again on install.</td></tr>
+          <tr><td><code>pnpm.store</code></td><td>pnpm store</td><td><code>Library/pnpm/store</code></td><td>Little is freed until projects reinstall, since node_modules link into it.</td></tr>
+          <tr><td><code>cocoapods.cache</code></td><td>CocoaPods cache</td><td><code>Library/Caches/CocoaPods</code></td><td><code>pod install</code> downloads specs and pods again.</td></tr>
+          <tr><td><code>metro.cache</code></td><td>Metro cache</td><td><code>$TMPDIR/metro-*</code></td><td>The first bundle after starting Metro is slower.</td></tr>
+          <tr><td><code>haste.cache</code></td><td>Haste map cache</td><td><code>$TMPDIR/haste-map-*</code></td><td>Metro and Jest rebuild it on their next run.</td></tr>
+          <tr><td><code>nodegyp.cache</code></td><td>node-gyp headers</td><td><code>Library/Caches/node-gyp</code></td><td>Downloaded when a native module next builds.</td></tr>
+          <tr><td><code>playwright.cache</code></td><td>Playwright browsers</td><td><code>Library/Caches/ms-playwright</code></td><td>Run <code>npx playwright install</code> again.</td></tr>
+          <tr><td><code>typescript.cache</code></td><td>TypeScript type cache</td><td><code>Library/Caches/typescript</code></td><td>Editors download types again as needed.</td></tr>
+          <tr><td><code>homebrew.cache</code></td><td>Homebrew downloads</td><td><code>Library/Caches/Homebrew</code></td><td>Installed tools aren't affected.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h2 id="privacy">Permissions and privacy</h2>
+      <ul>
+        <li><strong>Full Disk Access</strong> is optional. Without it, a few protected folders (the Trash, other apps' data) show partial sizes, marked with a lock. Developer caches don't need it.</li>
+        <li><strong>Notifications</strong> are requested the first time a warning fires.</li>
+        <li><strong>Open at login</strong> stays off until you turn it on.</li>
+        <li>The app isn't sandboxed, because it reads <code>~/Library/Developer</code>, inspects processes and runs <code>xcrun simctl</code> and <code>git</code>. The hardened runtime is on.</li>
+        <li><strong>No network calls and no telemetry.</strong> Logs, env files and configs are never opened; logs are shown by size and location only, because they can contain private data.</li>
+      </ul>
+      <p>Headroom keeps its own data in <code>~/Library/Application Support/Headroom</code>: <code>settings.json</code>, <code>history.jsonl</code> and <code>snapshots.json</code>.</p>
+
+      <h2 id="uninstall">Uninstall</h2>
+      <ol>
+        <li>If you turned on <strong>Open at login</strong>, turn it off in Settings.</li>
+        <li>Quit Headroom from its menu.</li>
+        <li>Move <code>Headroom.app</code> to the Trash.</li>
+        <li>Optionally, remove <code>~/Library/Application Support/Headroom</code> to delete its settings, history and snapshots.</li>
+      </ol>
+
+      <h2 id="faq">FAQ</h2>
+      <h3>Why do sizes differ from Finder?</h3>
+      <p>Headroom reports the space files actually take on disk (allocated size), which is what you get back when they're removed. Finder sometimes shows logical size, and APFS clones and purgeable space make the two differ.</p>
+      <h3>Why is my memory "used" so high when pressure is normal?</h3>
+      <p>macOS uses spare memory for caches and compression on purpose. Pressure and swap growth are the signs of a real shortage.</p>
+      <h3>Will it ever clean something by itself?</h3>
+      <p>No. There are no automatic or scheduled deletions. Warnings tell you; you decide.</p>
+      <h3>Why isn't it on the Mac App Store?</h3>
+      <p>The App Store requires the sandbox, which would block reading developer folders and running <code>simctl</code> and <code>git</code>.</p>
+      <h3>A worktree says "unpushed" but I pushed it.</h3>
+      <p>Headroom never fetches. Run <code>git fetch</code> in that repository and scan again.</p>
+
+      <h2 id="contributing">Contributing</h2>
+      <p>The code is a Swift package with no dependencies:</p>
+<pre><code>Sources/HeadroomCore     <span class="c"># logic, no UI: metrics, processes, catalog, guard, planner, git, records</span>
+Sources/Headroom         <span class="c"># SwiftUI app: menu bar, window, settings</span>
+Sources/headroom-cli     <span class="c"># read-only reports</span>
+Tests/HeadroomCoreTests  <span class="c"># Swift Testing; clean-ups run only against fixtures in $TMPDIR</span>
+docs/                    <span class="c"># this website (GitHub Pages), logo and brand assets</span></code></pre>
+      <p>New cache locations go in <code>StorageCatalog.swift</code> with a rebuild note and the processes that should block cleaning. Please add a test for any new rule. Never run live clean-ups on your own Mac while developing; use a fixture home or dry run.</p>
+
+      <h2 id="brand">Brand</h2>
+      <p>The mark is three usage bars that all stop below a ceiling. The space between them and the ceiling is the headroom: what you have left to work with.</p>
+      <div class="logo-row">
+        <div class="logo-box"><img src="../assets/icon.svg" alt="Headroom app icon" width="96" height="96"></div>
+        <div class="logo-box"><img src="../assets/mark.svg" alt="Headroom mark" width="56" height="56"></div>
+        <div class="logo-box light"><img src="../assets/mark-mono.svg" alt="One-colour mark" width="48" height="48"></div>
+        <div class="logo-box light"><img src="../assets/logo.svg" alt="Headroom logo" width="220" height="47"></div>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>File</th><th>Use it for</th></tr></thead>
+        <tbody>
+          <tr><td><a href="../assets/icon.svg"><code>icon.svg</code></a></td><td>App icon source (macOS grid, 1024 px canvas). <code>make icon</code> renders it to <code>Resources/AppIcon.icns</code>.</td></tr>
+          <tr><td><a href="../assets/mark.svg"><code>mark.svg</code></a></td><td>Favicon, avatars, small placements. Full-bleed tile.</td></tr>
+          <tr><td><a href="../assets/mark-mono.svg"><code>mark-mono.svg</code></a></td><td>One-colour mark (<code>currentColor</code>) for print, menu bar templates and tiny sizes.</td></tr>
+          <tr><td><a href="../assets/logo.svg"><code>logo.svg</code></a></td><td>Mark with wordmark, on light backgrounds.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Colours</h3>
+      <div class="swatches">
+        <div class="swatch"><i style="background:#0a111f"></i><div><b>Night</b><code>#0A111F</code></div></div>
+        <div class="swatch"><i style="background:#1c2b47"></i><div><b>Dusk</b><code>#1C2B47</code></div></div>
+        <div class="swatch"><i style="background:#3ddc97"></i><div><b>Headroom mint</b><code>#3DDC97</code></div></div>
+        <div class="swatch"><i style="background:#12a571"></i><div><b>Mint on light</b><code>#12A571</code></div></div>
+        <div class="swatch"><i style="background:#7dd3fc"></i><div><b>Sky</b><code>#7DD3FC</code></div></div>
+        <div class="swatch"><i style="background:#e8f1ff"></i><div><b>Ceiling</b><code>#E8F1FF</code></div></div>
+        <div class="swatch"><i style="background:#f5b53d"></i><div><b>Warning</b><code>#F5B53D</code></div></div>
+        <div class="swatch"><i style="background:#f0605d"></i><div><b>Critical</b><code>#F0605D</code></div></div>
+      </div>
+      <h3>Type and voice</h3>
+      <ul>
+        <li><strong>Type:</strong> the system font (SF Pro on Apple platforms), bold and slightly tight for headings. SF Mono for code.</li>
+        <li><strong>Voice:</strong> plain, calm and specific. Say what happens, how big it is and how to undo it. No scare words, no "boost" or "optimize".</li>
+        <li><strong>Mark usage:</strong> keep clear space of a quarter of the mark's width around it. Don't recolour the bars red or amber; status colours belong to the app's indicators, not the logo.</li>
+      </ul>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <a class="brand" href="../"><img src="../assets/mark.svg" alt="">Headroom</a>
+      <span>MIT licensed · made by Mohamed Aimane Skhairi</span>
+      <nav aria-label="Footer">
+        <a href="../">Home</a>
+        <a href="https://github.com/medaimane/headroom">GitHub</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    // Keep the table of contents open on wide screens; on phones it's collapsed and closes after a tap.
+    (() => {
+      const details = document.querySelector('.toc details');
+      const wide = matchMedia('(min-width: 960px)');
+      const sync = () => { details.open = wide.matches; };
+      sync();
+      wide.addEventListener('change', sync);
+      details.addEventListener('click', e => { if (e.target.closest('a') && !wide.matches) details.open = false; });
+    })();
+
+    // Highlight the section you're reading in the table of contents.
+    (() => {
+      const links = [...document.querySelectorAll('.toc a[href^="#"]')];
+      const byId = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+      const sections = [...byId.keys()].map(id => document.getElementById(id)).filter(Boolean);
+      if (!('IntersectionObserver' in window) || !sections.length) return;
+      const visible = new Set();
+      const update = () => {
+        const current = sections.find(s => visible.has(s.id));
+        links.forEach(a => a.classList.toggle('active', Boolean(current) && byId.get(current.id) === a));
+      };
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => e.isIntersecting ? visible.add(e.target.id) : visible.delete(e.target.id));
+        update();
+      }, { rootMargin: '-70px 0px -65% 0px' });
+      sections.forEach(s => observer.observe(s));
+    })();
+  </script>
+</body>
+</html>

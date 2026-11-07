@@ -1,8 +1,12 @@
+<p align="center"><img src="docs/assets/icon.svg" width="128" height="128" alt="Headroom app icon"></p>
+
 # Headroom
 
 A small macOS menu bar app that keeps a developer's Mac fast: it shows what's filling the disk and using memory, cleans rebuildable dev caches safely, and measures how much you can run at once (simulators, emulators, dev servers, agent sessions).
 
 Native SwiftUI, no dependencies, no network, no telemetry. It uses about 20 MB of memory.
+
+**Website and guide:** [medaimane.github.io/headroom](https://medaimane.github.io/headroom/) (source in [`docs/`](docs/)).
 
 ## What v1 does
 
@@ -46,6 +50,8 @@ open build/Headroom.app
 make install      # optional: copy to ~/Applications
 make test         # unit tests
 make cli ARGS=storage   # read-only reports: health, processes, storage, devices, worktrees, plan
+make icon         # re-render Resources/AppIcon.icns from docs/assets/icon.svg
+make site         # serve the website locally at http://localhost:8765
 ```
 
 The app is signed ad hoc ("Sign to Run Locally"), so it runs on the Mac that built it. To share builds, it would need a Developer ID signature and notarization.
@@ -66,6 +72,8 @@ Sources/HeadroomCore   logic, no UI: metrics, process grouping, storage catalog,
 Sources/Headroom       SwiftUI app: menu bar, window, settings
 Sources/headroom-cli   read-only command-line reports
 Tests/HeadroomCoreTests  Swift Testing; clean-ups run only against fixture folders in $TMPDIR
+docs/                  website (GitHub Pages): landing page, guide, logo and brand assets
+scripts/               app bundle and icon build scripts
 ```
 
 ## Roadmap
@@ -78,6 +86,10 @@ Tests/HeadroomCoreTests  Swift Testing; clean-ups run only against fixture folde
 6. Scheduled weekly checks.
 7. Device and build tuning (AVD RAM and cores, Gradle JVM, Metro and watchman) with backups.
 8. node_modules clean-up for merged, clean, pushed worktrees.
+
+## Brand
+
+The mark is three usage bars that stop below a ceiling; the gap is the headroom. Logo files, colours and usage notes are in [`docs/assets/`](docs/assets/) and the [brand section of the guide](https://medaimane.github.io/headroom/guide/#brand).
 
 ## License
 

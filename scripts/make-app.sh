@@ -15,6 +15,7 @@ rm -rf "$app"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp "$bin/Headroom" "$app/Contents/MacOS/Headroom"
 cp Resources/Info.plist "$app/Contents/Info.plist"
+cp Resources/AppIcon.icns "$app/Contents/Resources/AppIcon.icns"
 
 codesign --force --sign - --options runtime --timestamp=none "$app"
 codesign --verify --strict "$app"

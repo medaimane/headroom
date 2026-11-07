@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="currentColor">
+  <title>Headroom (one colour)</title>
+  <!-- One-colour mark for small sizes, print and template images. No tile. -->
+  <rect x="6" y="8" width="52" height="5" rx="2.5"/>
+  <rect x="6" y="36" width="13" height="22" rx="3"/>
+  <rect x="25.5" y="27" width="13" height="31" rx="3"/>
+  <rect x="45" y="19" width="13" height="39" rx="3"/>
+</svg>
