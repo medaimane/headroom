@@ -28,6 +28,7 @@
         <p>Start</p>
         <ul>
           <li><a href="#install">Install</a></li>
+          <li><a href="#first-launch">First launch of a download</a></li>
           <li><a href="#first-run">First run</a></li>
         </ul>
         <p>Using Headroom</p>
@@ -61,13 +62,22 @@
       <p>Headroom is a menu bar app for macOS 14 and later. It reports freely and changes nothing until you review and confirm. This guide covers installing it, every part of the app, and the rules it follows.</p>
 
       <h2 id="install">Install</h2>
-      <p>You need macOS 14 or later and Xcode 16 or later (for Swift 6). There are no other dependencies.</p>
+      <p>Headroom runs on macOS 14 or later, on Apple silicon and Intel Macs. There are two ways to get it.</p>
+      <h3>Download</h3>
+      <ol>
+        <li><a href="https://github.com/medaimane/headroom/releases/latest/download/Headroom.zip">Download Headroom.zip</a> from the latest <a href="https://github.com/medaimane/headroom/releases">release</a>.</li>
+        <li>Unzip it and move <strong>Headroom</strong> to your Applications folder.</li>
+        <li>Open it and follow <a href="#first-launch">First launch of a download</a> once.</li>
+      </ol>
+      <p>Headroom doesn't update itself (it makes no network calls). Check the releases page for new versions.</p>
+      <h3>Build from source</h3>
+      <p>You need Xcode 16 or later (for Swift 6). There are no other dependencies.</p>
 <pre><code>git clone https://github.com/medaimane/headroom.git
 cd headroom
 make app                  <span class="c"># builds build/Headroom.app (release, signed to run locally)</span>
 open build/Headroom.app
 make install              <span class="c"># optional: copies the app to ~/Applications</span></code></pre>
-      <p>The app is signed ad hoc ("Sign to Run Locally"), so it runs on the Mac that built it. Sharing a build with other Macs would need a Developer ID signature and notarization.</p>
+      <p>A build you make yourself runs on your Mac without any Gatekeeper prompt.</p>
       <div class="table-wrap"><table>
         <thead><tr><th>Command</th><th>What it does</th></tr></thead>
         <tbody>
@@ -76,10 +86,21 @@ make install              <span class="c"># optional: copies the app to ~/Applic
           <tr><td><code>make test</code></td><td>Runs the unit tests. Clean-up tests only touch fixture folders in <code>$TMPDIR</code>.</td></tr>
           <tr><td><code>make cli ARGS=storage</code></td><td>Runs a read-only command-line report.</td></tr>
           <tr><td><code>make install</code></td><td>Copies the app to <code>~/Applications</code>.</td></tr>
+          <tr><td><code>make release</code></td><td>Universal, ad-hoc signed <code>build/Headroom.zip</code> and its SHA-256, for a GitHub release.</td></tr>
           <tr><td><code>make icon</code></td><td>Re-renders the app icon from <code>docs/assets/icon.svg</code>.</td></tr>
           <tr><td><code>make site</code></td><td>Serves this website locally at <code>http://localhost:8765</code>.</td></tr>
         </tbody>
       </table></div>
+
+      <h2 id="first-launch">First launch of a download</h2>
+      <p>The downloaded app is signed, but not notarized by Apple: notarization needs a paid Apple Developer account, which this project doesn't have yet. macOS therefore asks you to approve Headroom once.</p>
+      <ol>
+        <li>Open Headroom. macOS says it can't verify that the app is free of malware. Click <strong>Done</strong> (not <em>Move to Trash</em>).</li>
+        <li>Open <strong>System Settings ▸ Privacy &amp; Security</strong> and scroll to <strong>Security</strong>. Next to "Headroom was blocked to protect your Mac", click <strong>Open Anyway</strong>.</li>
+        <li>Confirm with your password or Touch ID, then click <strong>Open Anyway</strong> once more.</li>
+      </ol>
+      <p>After that, Headroom opens normally.</p>
+      <div class="callout warn"><p><strong>Only approve a copy you trust.</strong> Download it from this site or the GitHub releases page, and if you like, compare its checksum with the one in the release notes: <code>shasum -a 256 ~/Downloads/Headroom.zip</code>. The source is open, so you can also <a href="#install">build it yourself</a> instead.</p></div>
 
       <h2 id="first-run">First run</h2>
       <ol>
@@ -247,6 +268,8 @@ swift run headroom-cli plan npm.cache gradle.caches   <span class="c"># what a c
       <p>macOS uses spare memory for caches and compression on purpose. Pressure and swap growth are the signs of a real shortage.</p>
       <h3>Will it ever clean something by itself?</h3>
       <p>No. There are no automatic or scheduled deletions. Warnings tell you; you decide.</p>
+      <h3>Why does macOS warn me when I open the download?</h3>
+      <p>Apple only skips that warning for apps notarized with a paid Developer ID. Headroom isn't yet, so you approve it once in Privacy &amp; Security. See <a href="#first-launch">First launch of a download</a>.</p>
       <h3>Why isn't it on the Mac App Store?</h3>
       <p>The App Store requires the sandbox, which would block reading developer folders and running <code>simctl</code> and <code>git</code>.</p>
       <h3>A worktree says "unpushed" but I pushed it.</h3>

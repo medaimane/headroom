@@ -40,6 +40,12 @@ Native SwiftUI, no dependencies, no network, no telemetry. It uses about 20 MB o
 
 Clean-up notes: Xcode's DerivedData contains Swift package checkouts managed by Xcode. They're part of the cache and are rebuilt with it.
 
+## Download
+
+Get `Headroom.zip` from the [latest release](https://github.com/medaimane/headroom/releases/latest) (Apple silicon and Intel, macOS 14+). Unzip it and move Headroom to Applications.
+
+The app is signed but not notarized yet (that needs a paid Apple Developer account), so macOS blocks the first launch: click **Done**, then **System Settings ▸ Privacy & Security ▸ Open Anyway**. Details are in the [guide](https://medaimane.github.io/headroom/guide/#first-launch).
+
 ## Build and run
 
 Requirements: macOS 14+, Xcode 16+ (Swift 6). No other tools.
@@ -48,13 +54,14 @@ Requirements: macOS 14+, Xcode 16+ (Swift 6). No other tools.
 make app          # build/Headroom.app, release, ad-hoc signed
 open build/Headroom.app
 make install      # optional: copy to ~/Applications
+make release      # universal build/Headroom.zip + .sha256 for a GitHub release
 make test         # unit tests
 make cli ARGS=storage   # read-only reports: health, processes, storage, devices, worktrees, plan
 make icon         # re-render Resources/AppIcon.icns from docs/assets/icon.svg
 make site         # serve the website locally at http://localhost:8765
 ```
 
-The app is signed ad hoc ("Sign to Run Locally"), so it runs on the Mac that built it. To share builds, it would need a Developer ID signature and notarization.
+Builds are signed ad hoc ("Sign to Run Locally"). A build you make yourself opens without a Gatekeeper prompt; downloaded builds need the one-time approval above until the app is notarized with a Developer ID.
 
 ### Permissions
 

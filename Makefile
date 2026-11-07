@@ -1,4 +1,4 @@
-.PHONY: app debug-app icon site test cli install clean
+.PHONY: app debug-app release icon site test cli install clean
 
 # Build build/Headroom.app (release, ad-hoc signed).
 app:
@@ -7,6 +7,10 @@ app:
 # Debug build: clean-ups are always a dry run.
 debug-app:
 	scripts/make-app.sh debug
+
+# Universal, ad-hoc signed build/Headroom.zip (+ .sha256) to attach to a GitHub release.
+release:
+	scripts/make-release.sh
 
 # Re-render Resources/AppIcon.icns from docs/assets/icon.svg after changing the logo.
 icon:
