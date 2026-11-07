@@ -63,6 +63,9 @@ struct MenuBarView: View {
                 }
                 .keyboardShortcut("o")
                 Spacer()
+                Button { AppInfo.showAboutPanel() } label: { Image(systemName: "info.circle") }
+                    .help("About Headroom")
+                    .accessibilityLabel("About Headroom")
                 Button {
                     openSettings()
                     NSApp.activate()
