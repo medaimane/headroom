@@ -95,17 +95,37 @@ make test
 
 All tests must pass, and new behaviour needs tests. Safety rules (guards, planners, executors) need tests that prove the unsafe case is refused, not only that the safe case works. CI runs the same tests on every pull request.
 
+## Branches
+
+Headroom uses a small git-flow model. `main` only ever holds released code, which is why the website (published from `main`) always matches the latest download.
+
+| Branch | Cut from | Merges into | What it's for |
+|---|---|---|---|
+| `main` | n/a | n/a | Released code only. Every release is a signed tag `vX.Y.Z` on `main`. |
+| `dev` | `main` | `release/*` | Day-to-day integration. The default branch; all feature and fix pull requests target it. |
+| `feat/<topic>`, `fix/<topic>`, `docs/<topic>` | `dev` | `dev` | One change each, e.g. `feat/bun-cache` or `fix/derived-data-size`. |
+| `release/X.Y.Z` | `dev` | `main`, then `main` into `dev` | Preparing a release: version, changelog, site label. No new features. |
+| `hotfix/X.Y.Z` | `main` | `main`, then `main` into `dev` | Urgent fixes to the latest release. |
+
+How changes are merged:
+
+- **Into `dev`:** squash and merge, so each pull request is one commit.
+- **`release/*` and `hotfix/*` into `main`:** a merge commit (not squash), so `main` can be merged back into `dev` cleanly.
+- **After every release or hotfix,** `main` is merged back into `dev`.
+
+`main` and `dev` only change through pull requests with CI passing.
+
 ## Sending a change
 
-1. Fork the repository and create a branch from `main` (for example `fix/derived-data-size` or `feat/bun-cache`).
+1. Fork the repository and create a branch from `dev` (for example `feat/bun-cache`).
 2. Keep each pull request to one change, and include tests and docs.
 3. Add a line under **Unreleased** in [CHANGELOG.md](CHANGELOG.md) for anything users will notice.
 4. Write commit messages in the imperative ("Add Bun cache location"), with a body explaining why when it isn't obvious.
-5. Open the pull request and fill in the template, including the safety checklist.
+5. Open the pull request **against `dev`** and fill in the template, including the safety checklist.
 
 ## Releases
 
-Releases are cut by the maintainer. The steps are in the guide's [Releasing](https://medaimane.github.io/headroom/guide/#releasing) section.
+Releases and hotfixes are cut by the maintainer, following the branches above. The full steps are in the guide's [Releasing](https://medaimane.github.io/headroom/guide/#releasing) section.
 
 ## License
 

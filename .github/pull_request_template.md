@@ -1,3 +1,5 @@
+<!-- Feature and fix pull requests target `dev`. Only `release/*` and `hotfix/*` branches target `main`. -->
+
 ## What and why
 
 <!-- What does this change, and why? Link the issue, e.g. "Closes #12". -->

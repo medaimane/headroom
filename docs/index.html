@@ -21,6 +21,7 @@
         <div class="nav-links">
           <a class="hide-sm" href="#features">Features</a>
           <a class="hide-sm" href="#safety">Safety</a>
+          <a class="hide-sm" href="#faq">FAQ</a>
           <a href="guide/">Guide</a>
         </div>
         <div class="nav-actions">
@@ -170,6 +171,44 @@ open build/Headroom.app
 
 <span class="c"># optional: keep it in ~/Applications</span>
 make install</code></pre>
+      </div>
+    </section>
+    <section class="band alt" id="faq">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Questions</h2>
+          <p>The short answers. The <a href="guide/#faq">guide</a> has more.</p>
+        </div>
+        <div class="faq">
+          <details>
+            <summary>Will Headroom delete my work?</summary>
+            <p>No. It only cleans developer caches from a fixed list, all of which their tools rebuild by themselves. It never touches anything inside a git working tree or any <code>.env*.local</code> file. Every clean-up first shows what goes, how big it is and how it rebuilds, and waits for your click. Dry run is on until you turn it off.</p>
+          </details>
+          <details>
+            <summary>Does it clean things automatically?</summary>
+            <p>No. There are no automatic or scheduled deletions. Headroom warns you when disk, memory or swap gets tight, and you decide what to do.</p>
+          </details>
+          <details>
+            <summary>Does it collect or send any data?</summary>
+            <p>No. Headroom makes no network calls and has no telemetry. Its settings and history stay in <code>~/Library/Application Support/Headroom</code> on your Mac. Logs, env files and configs are never opened; they're shown by size only.</p>
+          </details>
+          <details>
+            <summary>Why does macOS warn me when I open it?</summary>
+            <p>The download is signed but not yet notarized by Apple, which needs a paid developer account. Approve it once in System Settings ▸ Privacy &amp; Security ▸ Open Anyway, and it opens normally after that. <a href="guide/#first-launch">See the steps</a>, or <a href="guide/#install">build it yourself</a> from source.</p>
+          </details>
+          <details>
+            <summary>Which Macs does it run on?</summary>
+            <p>macOS 14 Sonoma or later, on Apple silicon and Intel. It's a native SwiftUI app that uses about 20 MB of memory.</p>
+          </details>
+          <details>
+            <summary>How much space can I get back?</summary>
+            <p>It depends on your tools. On a Mac used for iOS, Android and JavaScript work it's often tens of gigabytes, mostly Xcode DerivedData, Gradle caches and old simulators. The Storage page shows your exact numbers before anything happens.</p>
+          </details>
+          <details>
+            <summary>Is it free?</summary>
+            <p>Yes. Headroom is free and open source under the MIT license. The code is on <a href="https://github.com/medaimane/headroom">GitHub</a>, and contributions are welcome: see <a href="https://github.com/medaimane/headroom/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
+          </details>
+        </div>
       </div>
     </section>
   </main>

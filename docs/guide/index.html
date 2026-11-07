@@ -17,6 +17,7 @@
         <div class="nav-links">
           <a class="hide-sm" href="../#features">Features</a>
           <a class="hide-sm" href="../#safety">Safety</a>
+          <a class="hide-sm" href="../#faq">FAQ</a>
           <a href="./" aria-current="page">Guide</a>
         </div>
         <div class="nav-actions">
@@ -57,7 +58,9 @@
           <li><a href="#privacy">Permissions and privacy</a></li>
           <li><a href="#uninstall">Uninstall</a></li>
           <li><a href="#faq">FAQ</a></li>
-          <li><a href="#contributing">Contributing and releasing</a></li>
+          <li><a href="#contributing">Contributing</a></li>
+          <li><a href="#branches">Branches</a></li>
+          <li><a href="#releasing">Releasing</a></li>
         </ul>
       </details>
     </aside>
@@ -290,15 +293,47 @@ Sources/headroom-cli     <span class="c"># read-only reports</span>
 Tests/HeadroomCoreTests  <span class="c"># Swift Testing; clean-ups run only against fixtures in $TMPDIR</span>
 docs/                    <span class="c"># this website (GitHub Pages) and its assets</span></code></pre>
       <p>New cache locations go in <code>StorageCatalog.swift</code> with a rebuild note and the processes that should block cleaning. Please add a test for any new rule. Never run live clean-ups on your own Mac while developing; use a fixture home or dry run.</p>
+      <h3 id="branches">Branches</h3>
+      <p><code>main</code> only holds released code, and the website is published from it, so the site always matches the latest download. Day-to-day work happens on <code>dev</code>.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Branch</th><th>Cut from</th><th>Merges into</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>main</code></td><td>n/a</td><td>n/a</td><td>Released code. Signed tags <code>vX.Y.Z</code>, the website and downloads.</td></tr>
+          <tr><td><code>dev</code></td><td><code>main</code></td><td><code>release/*</code></td><td>Integration and the default branch. Feature and fix pull requests target it.</td></tr>
+          <tr><td><code>feat/*</code>, <code>fix/*</code>, <code>docs/*</code></td><td><code>dev</code></td><td><code>dev</code></td><td>One change each, squash-merged.</td></tr>
+          <tr><td><code>release/X.Y.Z</code></td><td><code>dev</code></td><td><code>main</code>, then back to <code>dev</code></td><td>Version, changelog and site label for a release.</td></tr>
+          <tr><td><code>hotfix/X.Y.Z</code></td><td><code>main</code></td><td><code>main</code>, then back to <code>dev</code></td><td>Urgent fixes to the latest release.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Release and hotfix branches go into <code>main</code> with a merge commit, not a squash, so <code>main</code> merges back into <code>dev</code> cleanly.</p>
+
       <h3 id="releasing">Releasing</h3>
-      <p>The website is published from <code>main</code> and always describes the latest release, so docs for a new feature land together with the release that ships it.</p>
       <ol>
-        <li>Set the new version in <code>Resources/Info.plist</code> (<code>CFBundleShortVersionString</code>).</li>
-        <li>Move the <em>Unreleased</em> notes in <code>CHANGELOG.md</code> under the new version and date.</li>
-        <li>Update the version label on the site (<code>data-version</code> in <code>docs/index.html</code> and <code>docs/guide/index.html</code>) and any docs for the new features.</li>
-        <li>Run <code>make test</code> and <code>make release</code>. The release script stops if the site or changelog don't match the version.</li>
-        <li>Commit, create a signed tag <code>vX.Y.Z</code>, push both, then create the GitHub release and attach <code>build/Headroom.zip</code>, keeping that exact file name.</li>
+        <li><strong>Cut the branch:</strong> <code>release/X.Y.Z</code> from <code>dev</code> (or <code>hotfix/X.Y.Z</code> from <code>main</code> for an urgent fix, then make the fix there).</li>
+        <li><strong>Prepare it:</strong>
+          <ul>
+            <li>set <code>CFBundleShortVersionString</code> in <code>Resources/Info.plist</code>;</li>
+            <li>move the <em>Unreleased</em> notes in <code>CHANGELOG.md</code> under the new version and today's date;</li>
+            <li>update the site's version label (<code>data-version</code> in <code>docs/index.html</code> and <code>docs/guide/index.html</code>) and the docs for anything new.</li>
+          </ul>
+        </li>
+        <li><strong>Check it:</strong> <code>make test</code> and <code>make release</code>. The release script stops if the site or changelog don't match the version.</li>
+        <li><strong>Merge into <code>main</code>:</strong> open a pull request from the branch into <code>main</code>, wait for CI, and merge it with a merge commit.</li>
+        <li><strong>Tag and publish:</strong> on the updated <code>main</code>, create a signed tag <code>vX.Y.Z</code> and push it. Run <code>make release</code> again on that commit, then create the GitHub release from the tag with the changelog notes, and attach <code>build/Headroom.zip</code> with exactly that name.</li>
+        <li><strong>Sync <code>dev</code>:</strong> merge <code>main</code> back into <code>dev</code>, then delete the release or hotfix branch.</li>
       </ol>
+<pre><code><span class="c"># release</span>
+git switch dev &amp;&amp; git pull
+git switch -c release/0.2.0
+<span class="c"># …version, changelog, site label, docs…</span>
+make test &amp;&amp; make release
+git push -u origin release/0.2.0          <span class="c"># open the PR into main, merge with a merge commit</span>
+
+<span class="c"># after the merge</span>
+git switch main &amp;&amp; git pull
+git tag -s v0.2.0 -m "Headroom v0.2.0" &amp;&amp; git push origin v0.2.0
+make release                              <span class="c"># attach build/Headroom.zip to the GitHub release</span>
+git switch dev &amp;&amp; git merge main &amp;&amp; git push</code></pre>
 
     </main>
   </div>
