@@ -6,6 +6,15 @@
   <title>Headroom Guide</title>
   <meta name="description" content="How to install and use Headroom: live health, storage and safe clean-ups, simulators and devices, worktrees, snapshots, the CLI and the safety model.">
   <meta name="theme-color" content="#0a111f">
+  <meta property="og:title" content="Headroom Guide">
+  <meta property="og:description" content="Install Headroom and use every part of it: live health, safe clean-ups, simulators, worktrees, snapshots and the CLI.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://medaimane.github.io/headroom/guide/">
+  <meta property="og:image" content="https://medaimane.github.io/headroom/assets/social-preview.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="Headroom app icon with the tagline: Keep your dev Mac fast.">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../assets/site.css">
 </head>
@@ -68,7 +77,7 @@
     <main class="prose">
       <h1>Headroom guide</h1>
       <p>Headroom is a menu bar app for macOS 14 and later. It reports freely and changes nothing until you review and confirm. This guide covers installing it, every part of the app, and the rules it follows.</p>
-      <p class="fine">This guide describes Headroom <span class="version" data-version="0.1.0">v0.1.0</span>, the latest release. See <a href="https://github.com/medaimane/headroom/blob/main/CHANGELOG.md">what's new</a>; guides for older versions are in the <code>docs/</code> folder of each <a href="https://github.com/medaimane/headroom/tags">release tag</a>.</p>
+      <p class="fine">This guide describes Headroom <span class="version" data-version="0.1.1">v0.1.1</span>, the latest release. See <a href="https://github.com/medaimane/headroom/blob/main/CHANGELOG.md">what's new</a>; guides for older versions are in the <code>docs/</code> folder of each <a href="https://github.com/medaimane/headroom/tags">release tag</a>.</p>
 
       <h2 id="install">Install</h2>
       <p>Headroom runs on macOS 14 or later, on Apple silicon and Intel Macs. There are two ways to get it.</p>
@@ -97,6 +106,7 @@ make install              <span class="c"># optional: copies the app to ~/Applic
           <tr><td><code>make install</code></td><td>Copies the app to <code>~/Applications</code>.</td></tr>
           <tr><td><code>make release</code></td><td>Universal, ad-hoc signed <code>build/Headroom.zip</code> and its SHA-256, for a GitHub release.</td></tr>
           <tr><td><code>make icon</code></td><td>Re-renders the app icon from <code>docs/assets/icon.svg</code>.</td></tr>
+          <tr><td><code>make social</code></td><td>Re-renders the 1280×640 link preview image, <code>docs/assets/social-preview.png</code>.</td></tr>
           <tr><td><code>make site</code></td><td>Serves this website locally at <code>http://localhost:8765</code>.</td></tr>
         </tbody>
       </table></div>
@@ -121,7 +131,7 @@ make install              <span class="c"># optional: copies the app to ~/Applic
       </ol>
 
       <h2 id="menu-bar">Menu bar</h2>
-      <p>The menu bar icon shows the overall state. It turns into a warning when disk, memory pressure, swap or temperature needs attention, and it shows free disk space when disk is the problem. The quick view has free disk, memory pressure, swap, CPU and thermal state, plus the groups using the most memory.</p>
+      <p>The menu bar icon shows the overall state. It turns into a warning when disk, memory pressure, swap or temperature needs attention, and it shows free disk space when disk is the problem. The quick view has free disk, memory pressure, swap, CPU and thermal state, plus the groups using the most memory. The <strong>ⓘ</strong> button opens <strong>About Headroom</strong>, which shows the version you're running; Settings shows it too.</p>
 
       <h2 id="health">Health</h2>
       <p>Headroom samples the system every 5 seconds (you can change this) and keeps an hour of charts.</p>
@@ -179,7 +189,7 @@ make install              <span class="c"># optional: copies the app to ~/Applic
       <p>Name a workload (for example "1 sim + 1 emu + Metro + Next + 2 agents"), click <strong>Start recording</strong>, work as usual, then <strong>Stop and save</strong>. Headroom keeps the peaks: memory used, worst memory pressure, swap growth, CPU, thermal state, and how many devices and agent sessions were running. Over time this tells you what your Mac can carry before it starts swapping.</p>
 
       <h2 id="history">History</h2>
-      <p>Every action, including dry runs, is recorded with when it ran, what it touched, its size, whether it worked and how to undo it. Export the history as Markdown from the History page.</p>
+      <p>Every action, including dry runs, is recorded with when it ran, what it touched, its size, whether it worked and how to undo it. Settings changes are recorded too: turning dry run on or off right away, and other settings once you stop adjusting them. Export the history as Markdown from the History page.</p>
 
       <h2 id="settings">Warnings and settings</h2>
       <p>Warnings arrive as macOS notifications. Each kind waits 30 minutes before repeating, and memory pressure has to last before it counts.</p>
@@ -281,6 +291,8 @@ swift run headroom-cli plan npm.cache gradle.caches   <span class="c"># what a c
       <p>Apple only skips that warning for apps notarized with a paid Developer ID. Headroom isn't yet, so you approve it once in Privacy &amp; Security. See <a href="#first-launch">First launch of a download</a>.</p>
       <h3>Why isn't it on the Mac App Store?</h3>
       <p>The App Store requires the sandbox, which would block reading developer folders and running <code>simctl</code> and <code>git</code>.</p>
+      <h3>Where can I ask a question or suggest something?</h3>
+      <p>In <a href="https://github.com/medaimane/headroom/discussions">Discussions</a>. Bugs and concrete feature requests go in <a href="https://github.com/medaimane/headroom/issues/new/choose">issues</a>.</p>
       <h3>A worktree says "unpushed" but I pushed it.</h3>
       <p>Headroom never fetches. Run <code>git fetch</code> in that repository and scan again.</p>
 
@@ -341,7 +353,7 @@ git switch dev &amp;&amp; git merge main &amp;&amp; git push</code></pre>
   <footer class="site-footer">
     <div class="wrap">
       <a class="brand" href="../"><img src="../assets/mark.svg" alt="">Headroom</a>
-      <span><span class="version" data-version="0.1.0">v0.1.0</span> · MIT licensed · made by Mohamed Aimane Skhairi</span>
+      <span><span class="version" data-version="0.1.1">v0.1.1</span> · MIT licensed · made by Mohamed Aimane Skhairi</span>
       <nav aria-label="Footer">
         <a href="../">Home</a>
         <a href="https://github.com/medaimane/headroom/blob/main/CHANGELOG.md">What's new</a>

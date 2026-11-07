@@ -1,5 +1,11 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Ask a question
+    url: https://github.com/medaimane/headroom/discussions/categories/q-a
+    about: How do I…? Is this expected? Ask in Discussions so the answer helps others too.
+  - name: Share an idea
+    url: https://github.com/medaimane/headroom/discussions/categories/ideas
+    about: Early ideas and open-ended suggestions. Ready-to-build requests can use the feature form above.
   - name: Report a security or safety problem
     url: https://github.com/medaimane/headroom/security/advisories/new
     about: If Headroom could delete, change or reveal something it shouldn't, report it privately here.

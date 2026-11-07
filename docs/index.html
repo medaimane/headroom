@@ -9,6 +9,12 @@
   <meta property="og:title" content="Headroom: keep your dev Mac fast">
   <meta property="og:description" content="Disk, memory and dev-cache health for macOS developers. Review-first clean-ups, no telemetry, MIT licensed.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://medaimane.github.io/headroom/">
+  <meta property="og:image" content="https://medaimane.github.io/headroom/assets/social-preview.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="Headroom app icon with the tagline: Keep your dev Mac fast.">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/icon.svg">
   <link rel="stylesheet" href="assets/site.css">
@@ -36,7 +42,7 @@
     <section class="hero">
       <div class="wrap">
         <div>
-          <a class="eyebrow" href="https://github.com/medaimane/headroom/blob/main/CHANGELOG.md"><span class="eyebrow-tag">New</span><span class="version" data-version="0.1.0">v0.1.0</span> is out · see what's new<span aria-hidden="true">→</span></a>
+          <a class="eyebrow" href="https://github.com/medaimane/headroom/blob/main/CHANGELOG.md"><span class="eyebrow-tag">New</span><span class="version" data-version="0.1.1">v0.1.1</span> is out · see what's new<span aria-hidden="true">→</span></a>
           <h1>Keep your dev Mac fast. Keep the <span class="room">headroom</span>.</h1>
           <p class="lede">Headroom is a small menu bar app that shows what's filling your disk and memory while you run simulators, emulators, dev servers and agent sessions. It cleans rebuildable developer caches, but only after you've seen exactly what goes and clicked to confirm.</p>
           <div class="cta">
@@ -46,29 +52,32 @@
           <p class="fine">Free and open source · Apple silicon and Intel · macOS 14 or later · about 2 MB. Not notarized yet, so macOS asks you to approve it once: <a href="guide/#first-launch">see how</a>.</p>
         </div>
 
-        <div class="mock" role="img" aria-label="The Headroom menu bar panel showing disk free, memory pressure, swap, CPU and the biggest memory users">
+        <div class="mock" role="img" aria-label="The Headroom menu bar panel: disk free, memory pressure, memory used, swap, CPU and thermal state, then the five biggest memory users grouped by what's running">
           <div class="mock-bar">
             <span>Fri 9:41</span>
-            <img src="assets/mark-mono.svg" alt="">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 17a8.5 8.5 0 1 1 15 0"/><path d="M12 13l-3.5-4"/><circle cx="12" cy="13.5" r="1.2" fill="currentColor"/></svg>
           </div>
           <div class="mock-panel">
-            <div class="mock-head">
-              <span>Headroom</span>
-              <span class="ok"><span class="dot"></span>All good</span>
+            <div class="mp-head"><b>Headroom</b><span><i class="sd"></i>All good</span></div>
+            <div class="mp-grid">
+                <i class="sd"></i><span>Disk free</span><span>142 GB</span>
+                <i class="sd"></i><span>Memory pressure</span><span>Normal</span>
+                <i class="sd"></i><span>Memory used</span><span>27.4 GB of 36 GB</span>
+                <i class="sd"></i><span>Swap</span><span>1.2 GB</span>
+                <i class="sd"></i><span>CPU</span><span>18%</span>
+                <i class="sd"></i><span>Thermal</span><span>Nominal</span>
             </div>
-            <div class="tiles">
-              <div class="tile"><span>Disk free</span><b>142 GB</b><div class="meter"><i style="width:72%"></i></div></div>
-              <div class="tile"><span>Memory pressure</span><b>Normal</b><div class="meter"><i style="width:38%"></i></div></div>
-              <div class="tile"><span>Swap</span><b>1.2 GB</b><div class="meter"><i class="warn" style="width:22%"></i></div></div>
-              <div class="tile"><span>CPU</span><b>18%</b><div class="meter"><i style="width:18%"></i></div></div>
+            <hr>
+            <div class="mp-sub"><span>Top memory users</span><span>2 devices · 3 agents</span></div>
+            <div class="mp-groups">
+                <div class="mp-group"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg><span>Browsers</span><span>6.4 GB</span></div>
+                <div class="mp-group"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2"/><path d="M6 6h12M6 18h12"/></svg><span>Android emulator</span><span>4.1 GB</span></div>
+                <div class="mp-group"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.8"/><path d="M10.5 5h3"/></svg><span>iOS Simulator</span><span>3.2 GB</span></div>
+                <div class="mp-group"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3l1.6 4.4L16 9l-4.4 1.6L10 15l-1.6-4.4L4 9l4.4-1.6z"/><path d="M17.5 14l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg><span>Claude Code agents</span><span>2.6 GB</span></div>
+                <div class="mp-group"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="5" width="12" height="12" rx="2.5"/><path d="M6 11h12M9 20l1.5-3M15 20l-1.5-3M9 2.5h6M12 2.5V5"/></svg><span>Metro</span><span>1.1 GB</span></div>
             </div>
-            <div class="rows">
-              <div class="row"><span>Browsers</span><span>6.4 GB</span></div>
-              <div class="row"><span>Android emulator</span><span>4.1 GB</span></div>
-              <div class="row"><span>iOS Simulator</span><span>3.2 GB</span></div>
-              <div class="row"><span>Claude Code agents · 3</span><span>2.6 GB</span></div>
-              <div class="row"><span>Metro · Next.js</span><span>1.9 GB</span></div>
-            </div>
+            <hr>
+            <div class="mp-foot"><span class="mp-btn">Open Headroom</span><span class="mp-spacer"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.1"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span class="mp-btn">Quit</span></div>
           </div>
         </div>
       </div>
@@ -111,7 +120,7 @@
           </article>
           <article class="card">
             <h3><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 2"/></svg></span>History and undo notes</h3>
-            <p>Every action is logged locally: what, when, how big, and how to undo it. Export it as Markdown whenever you like.</p>
+            <p>Every action and settings change is logged locally: what, when, how big, and how to undo it. Export it as Markdown whenever you like.</p>
           </article>
           <article class="card">
             <h3><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V7l8-4 8 4v10l-8 4z"/><path d="M4 7l8 4 8-4"/><path d="M12 11v10"/></svg></span>A CLI too</h3>
@@ -177,7 +186,7 @@ make install</code></pre>
       <div class="wrap">
         <div class="section-head">
           <h2>Questions</h2>
-          <p>The short answers. The <a href="guide/#faq">guide</a> has more.</p>
+          <p>The short answers. The <a href="guide/#faq">guide</a> has more, and you can ask anything in <a href="https://github.com/medaimane/headroom/discussions">Discussions</a>.</p>
         </div>
         <div class="faq">
           <details>
@@ -216,7 +225,7 @@ make install</code></pre>
   <footer class="site-footer">
     <div class="wrap">
       <a class="brand" href="./"><img src="assets/mark.svg" alt="">Headroom</a>
-      <span><span class="version" data-version="0.1.0">v0.1.0</span> · MIT licensed · made by Mohamed Aimane Skhairi</span>
+      <span><span class="version" data-version="0.1.1">v0.1.1</span> · MIT licensed · made by Mohamed Aimane Skhairi</span>
       <nav aria-label="Footer">
         <a href="https://github.com/medaimane/headroom/blob/main/CHANGELOG.md">What's new</a>
         <a href="guide/">Guide</a>
