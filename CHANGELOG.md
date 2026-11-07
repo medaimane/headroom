@@ -6,6 +6,8 @@ Downloads are on the [releases page](https://github.com/medaimane/headroom/relea
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-07
+
 ### Added
 - **Dev environment page:** booted simulators, running emulators, dev servers with the ports they listen on, and Claude Code agent sessions per worktree. Stop a simulator (`simctl shutdown`), emulator or dev server after its own confirmation: always a normal stop request, never a force-quit, and only if it's still the same process. Agent sessions are shown but never stopped. `headroom-cli dev` prints the same report.
 - **Remove node_modules from old worktrees:** on the Worktrees page, remove a worktree's `node_modules` with one confirmation each, only when the worktree is clean and pushed, git ignores the folder, and nothing is running from it. Everything is checked again right before removal, and History says how to reinstall. `headroom-cli node-modules` shows which pass the checks, without removing anything.
@@ -41,6 +43,7 @@ The first public release.
 - **`headroom-cli`:** read-only reports for health, processes, storage, devices, worktrees and a dry-run plan.
 - A universal download (Apple silicon and Intel), plus a website and guide.
 
-[Unreleased]: https://github.com/medaimane/headroom/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/medaimane/headroom/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/medaimane/headroom/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/medaimane/headroom/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/medaimane/headroom/releases/tag/v0.1.0
