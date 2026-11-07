@@ -10,11 +10,11 @@ Native SwiftUI, no dependencies, no network, no telemetry. It uses about 20 MB o
 
 **Website and guide:** [medaimane.github.io/headroom](https://medaimane.github.io/headroom/) (source in [`docs/`](docs/)).
 
-## What v1 does
+## What it does
 
 | Area | What you get |
 |---|---|
-| **Menu bar** | Free disk, memory pressure, swap, CPU and thermal state at a glance, with the top memory users. The icon turns into a warning when something needs attention. |
+| **Menu bar** | Free disk, memory pressure, swap, CPU and thermal state at a glance, with the top memory users. The icon turns into a warning when something needs attention. The ⓘ button shows the version (About Headroom). |
 | **Health** | Live charts for the last hour, plus memory and CPU grouped by what's running: iOS Simulator, Android emulator, Claude Code agents (one row per worktree), Metro, Next.js, Nx/builds/tests, Gradle, Xcode, Docker/VMs, browsers, and more. |
 | **Storage** | Free space against a target (100 GB by default), and the size of every known developer cache: DerivedData, DeviceSupport, Gradle, npm, Yarn, pnpm, CocoaPods, Metro, Playwright, Homebrew, … |
 | **Safe clean-up** | Pick caches, review exactly what goes and how it rebuilds, then confirm. Dry run is on until you turn it off. |
@@ -22,7 +22,7 @@ Native SwiftUI, no dependencies, no network, no telemetry. It uses about 20 MB o
 | **Explore disk** | A read-only, size-sorted drill-down of your home folder. |
 | **Worktrees** | Every git worktree under `~/Developer`: branch, uncommitted changes, unpushed commits, last commit, node_modules and Nx cache size. Read-only. |
 | **Workload snapshots** | Record a named workload (for example "1 sim + 1 emu + Metro + Next + 2 agents") and keep its peaks: memory, pressure, swap growth, CPU, thermal state. |
-| **History** | Every action, when it ran, its size and how to undo it. Exportable as Markdown. |
+| **History** | Every action and settings change, when it ran, its size and how to undo it. Exportable as Markdown. |
 | **Warnings** | Notifications for low disk, sustained memory pressure, heavy swap and throttling (debounced). |
 
 ## Safety rules (enforced in code and covered by tests)
