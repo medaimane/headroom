@@ -98,7 +98,7 @@ scripts/               app bundle and icon build scripts
 
 ## Contributing
 
-Bug reports, cache locations and fixes are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md): setup, the safety rules every change must keep, the branch model (work branches from `dev`; `main` holds releases), and how to send a pull request. Please follow the [code of conduct](CODE_OF_CONDUCT.md), and report security or safety problems privately as described in [SECURITY.md](SECURITY.md).
+Questions and ideas are welcome in [Discussions](https://github.com/medaimane/headroom/discussions); bug reports, cache locations and fixes in issues and pull requests. Start with [CONTRIBUTING.md](CONTRIBUTING.md): setup, the safety rules every change must keep, the branch model (work branches from `dev`; `main` holds releases), and how to send a pull request. Please follow the [code of conduct](CODE_OF_CONDUCT.md), and report security or safety problems privately as described in [SECURITY.md](SECURITY.md).
 
 ## Changelog
 

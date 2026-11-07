@@ -6,6 +6,7 @@ By taking part you agree to follow the [code of conduct](CODE_OF_CONDUCT.md). Se
 
 ## Ways to help
 
+- **Ask a question or share an idea** in [Discussions](https://github.com/medaimane/headroom/discussions). Issues are for bugs and concrete feature requests.
 - **Report a bug** or **suggest a feature** with the [issue forms](https://github.com/medaimane/headroom/issues/new/choose).
 - **Add a cache location** your tools use (see [Adding a cache location](#adding-a-cache-location)).
 - **Teach Headroom a tool** it doesn't recognise yet, in `ProcessCategorizer.swift`.
@@ -33,6 +34,7 @@ Other useful targets:
 | `make app` | Release build |
 | `make site` | Serves the website at http://localhost:8765 |
 | `make icon` | Re-renders the app icon from `docs/assets/icon.svg` |
+| `make social` | Re-renders the 1280×640 social preview image `docs/assets/social-preview.png` |
 
 You can also open `Package.swift` in Xcode.
 

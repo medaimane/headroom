@@ -1,4 +1,4 @@
-.PHONY: app debug-app release icon site test cli install clean
+.PHONY: app debug-app release icon social site test cli install clean
 
 # Build build/Headroom.app (release, ad-hoc signed).
 app:
@@ -15,6 +15,10 @@ release:
 # Re-render Resources/AppIcon.icns from docs/assets/icon.svg after changing the logo.
 icon:
 	swift scripts/make-icon.swift
+
+# Re-render docs/assets/social-preview.png (1280×640 link preview; upload it in GitHub Settings ▸ Social preview).
+social:
+	swift scripts/make-social-preview.swift
 
 # Serve the landing page and guide at http://localhost:8765
 site:
