@@ -17,6 +17,16 @@ cd "$root"
 version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Resources/Info.plist)"
 archs=(--arch arm64 --arch x86_64)
 
+# The website and changelog must describe this version before it ships.
+for page in docs/index.html docs/guide/index.html; do
+  if ! grep -q "data-version=\"$version\"" "$page"; then
+    echo "error: $page doesn't show version $version (update its data-version label)" >&2; exit 1
+  fi
+done
+if ! grep -q "^## \[$version\]" CHANGELOG.md; then
+  echo "error: CHANGELOG.md has no section for $version" >&2; exit 1
+fi
+
 swift build -c release "${archs[@]}" --product Headroom
 bin="$(swift build -c release "${archs[@]}" --show-bin-path)"
 

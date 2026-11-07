@@ -94,6 +94,10 @@ scripts/               app bundle and icon build scripts
 7. Device and build tuning (AVD RAM and cores, Gradle JVM, Metro and watchman) with backups.
 8. node_modules clean-up for merged, clean, pushed worktrees.
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md). Release steps are in the [guide](https://medaimane.github.io/headroom/guide/#releasing).
+
 ## Brand
 
 The mark is three usage bars that stop below a ceiling; the gap is the headroom. Logo files, colours and usage notes are in [`docs/assets/`](docs/assets/) and the [brand section of the guide](https://medaimane.github.io/headroom/guide/#brand).

@@ -57,7 +57,7 @@
           <li><a href="#privacy">Permissions and privacy</a></li>
           <li><a href="#uninstall">Uninstall</a></li>
           <li><a href="#faq">FAQ</a></li>
-          <li><a href="#contributing">Contributing</a></li>
+          <li><a href="#contributing">Contributing and releasing</a></li>
           <li><a href="#brand">Brand</a></li>
         </ul>
       </details>
@@ -66,6 +66,7 @@
     <main class="prose">
       <h1>Headroom guide</h1>
       <p>Headroom is a menu bar app for macOS 14 and later. It reports freely and changes nothing until you review and confirm. This guide covers installing it, every part of the app, and the rules it follows.</p>
+      <p class="fine">This guide describes Headroom <span class="version" data-version="0.1.0">v0.1.0</span>, the latest release. See <a href="https://github.com/medaimane/headroom/blob/main/CHANGELOG.md">what's new</a>; guides for older versions are in the <code>docs/</code> folder of each <a href="https://github.com/medaimane/headroom/tags">release tag</a>.</p>
 
       <h2 id="install">Install</h2>
       <p>Headroom runs on macOS 14 or later, on Apple silicon and Intel Macs. There are two ways to get it.</p>
@@ -289,6 +290,15 @@ Sources/headroom-cli     <span class="c"># read-only reports</span>
 Tests/HeadroomCoreTests  <span class="c"># Swift Testing; clean-ups run only against fixtures in $TMPDIR</span>
 docs/                    <span class="c"># this website (GitHub Pages), logo and brand assets</span></code></pre>
       <p>New cache locations go in <code>StorageCatalog.swift</code> with a rebuild note and the processes that should block cleaning. Please add a test for any new rule. Never run live clean-ups on your own Mac while developing; use a fixture home or dry run.</p>
+      <h3 id="releasing">Releasing</h3>
+      <p>The website is published from <code>main</code> and always describes the latest release, so docs for a new feature land together with the release that ships it.</p>
+      <ol>
+        <li>Set the new version in <code>Resources/Info.plist</code> (<code>CFBundleShortVersionString</code>).</li>
+        <li>Move the <em>Unreleased</em> notes in <code>CHANGELOG.md</code> under the new version and date.</li>
+        <li>Update the version label on the site (<code>data-version</code> in <code>docs/index.html</code> and <code>docs/guide/index.html</code>) and any docs for the new features.</li>
+        <li>Run <code>make test</code> and <code>make release</code>. The release script stops if the site or changelog don't match the version.</li>
+        <li>Commit, create a signed tag <code>vX.Y.Z</code>, push both, then create the GitHub release and attach <code>build/Headroom.zip</code>, keeping that exact file name.</li>
+      </ol>
 
       <h2 id="brand">Brand</h2>
       <p>The mark is three usage bars that all stop below a ceiling. The space between them and the ceiling is the headroom: what you have left to work with.</p>
@@ -330,9 +340,10 @@ docs/                    <span class="c"># this website (GitHub Pages), logo and
   <footer class="site-footer">
     <div class="wrap">
       <a class="brand" href="../"><img src="../assets/mark.svg" alt="">Headroom</a>
-      <span>MIT licensed · made by Mohamed Aimane Skhairi</span>
+      <span><span class="version" data-version="0.1.0">v0.1.0</span> · MIT licensed · made by Mohamed Aimane Skhairi</span>
       <nav aria-label="Footer">
         <a href="../">Home</a>
+        <a href="https://github.com/medaimane/headroom/blob/main/CHANGELOG.md">What's new</a>
         <a href="https://github.com/medaimane/headroom">GitHub</a>
       </nav>
     </div>
