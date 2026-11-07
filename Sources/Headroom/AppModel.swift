@@ -14,6 +14,7 @@ final class AppModel {
         didSet {
             guard settings != oldValue else { return }
             try? settingsStore.save(settings)
+            noteSettingsChange(from: oldValue)
         }
     }
 
@@ -58,6 +59,9 @@ final class AppModel {
     private var loopTask: Task<Void, Never>?
     private var tick = 0
     private var askedForNotifications = false
+    /// Settings as they were before the current burst of edits (stepper clicks, typing), recorded once it settles.
+    private var settingsBeforeEdits: HeadroomSettings?
+    private var settingsHistoryTask: Task<Void, Never>?
 
     init() {
         let support = paths.supportDirectory
@@ -283,6 +287,29 @@ final class AppModel {
     }
 
     // MARK: History
+
+    /// Dry run is recorded right away; other settings once edits pause for 2 seconds, so five stepper clicks make one entry.
+    private func noteSettingsChange(from old: HeadroomSettings) {
+        if old.dryRun != settings.dryRun {
+            record(SettingsHistory.dryRunEntry(isOn: settings.dryRun))
+        }
+        if settingsBeforeEdits == nil { settingsBeforeEdits = old }
+        settingsHistoryTask?.cancel()
+        settingsHistoryTask = Task {
+            try? await Task.sleep(for: .seconds(2))
+            guard !Task.isCancelled else { return }
+            flushSettingsHistory()
+        }
+    }
+
+    /// Records the settled settings changes. Also called when the app quits, so nothing is lost.
+    func flushSettingsHistory() {
+        guard var before = settingsBeforeEdits else { return }
+        settingsBeforeEdits = nil
+        settingsHistoryTask?.cancel()
+        before.dryRun = settings.dryRun  // already recorded when it changed
+        for entry in SettingsHistory.entries(from: before, to: settings) { record(entry) }
+    }
 
     func record(_ entry: HistoryEntry) {
         try? historyStore.append(entry)
