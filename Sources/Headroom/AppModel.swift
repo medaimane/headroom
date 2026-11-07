@@ -256,9 +256,10 @@ final class AppModel {
             // Git status first (fast), then folder sizes one by one as they finish.
             let found = await scanner.scan(roots: roots, measureFolders: false)
             worktrees = found
-            await forEachLimited(found, limit: 2) { info in
-                let measured = await Task.detached(priority: .utility) { WorktreeScanner.withFolderSizes(info) }.value
-                if let index = self.worktrees.firstIndex(where: { $0.path == info.path }) { self.worktrees[index] = measured }
+            _ = await WorktreeScanner.withFolderSizes(found) { measured in
+                await MainActor.run {
+                    if let index = self.worktrees.firstIndex(where: { $0.path == measured.path }) { self.worktrees[index] = measured }
+                }
             }
             lastWorktreeScan = Date()
             scanningWorktrees = false

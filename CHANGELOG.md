@@ -9,6 +9,9 @@ Downloads are on the [releases page](https://github.com/medaimane/headroom/relea
 ### Added
 - **About Headroom:** the version, with links to the website, guide, changelog and bug reports. Open it from the ⓘ button in the menu bar panel or from Settings, which now also shows the version.
 
+### Changed
+- **Faster scans:** folder sizes are measured with a lighter file walk, and worktrees six at a time. On a Mac with 39 worktrees the full worktree report went from about 95 to 30 seconds, and storage and device scans are quicker too.
+
 ### Fixed
 - **History now records settings changes,** as it says it does. Turning dry run on or off is recorded straight away; other settings are recorded once you stop adjusting them, as one entry like "Disk warning: 60 GB → 85 GB" with how to set it back.
 

@@ -32,29 +32,52 @@ public enum DirectorySizer {
             return DirectorySize(bytes: size, fileCount: 1, newestModification: values?.contentModificationDate, partial: false)
         }
 
-        let partialFlag = PartialFlag()
-        guard let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: keys, options: [], errorHandler: { _, _ in
-            partialFlag.value = true
-            return true
-        }) else {
-            return DirectorySize(bytes: 0, fileCount: 0, newestModification: nil, partial: true)
-        }
+        return walk(url.path, isCancelled: isCancelled)
+    }
 
+    /// Walks a folder with fts(3), reading only each item's metadata (lstat). Much faster than
+    /// FileManager's enumerator on big trees such as node_modules, because no URL objects are built.
+    /// FTS_PHYSICAL means symlinks are reported as links and never followed.
+    private static func walk(_ path: String, isCancelled: @Sendable () -> Bool) -> DirectorySize {
         var total: Int64 = 0
         var count = 0
-        var newest: Date?
-        for case let item as URL in enumerator {
-            if count % 2048 == 0, isCancelled() { break }
-            guard let values = try? item.resourceValues(forKeys: Set(keys)) else { continue }
-            if values.isRegularFile == true {
-                total += Int64(values.totalFileAllocatedSize ?? values.fileAllocatedSize ?? 0)
+        var newest: timespec?
+        var partial = false
+
+        let handle: UnsafeMutablePointer<FTS>? = path.withCString { cPath in
+            var arguments: [UnsafeMutablePointer<CChar>?] = [strdup(cPath), nil]
+            defer { free(arguments[0]) }
+            return fts_open(&arguments, FTS_PHYSICAL | FTS_NOCHDIR, nil)
+        }
+        guard let handle else { return DirectorySize(bytes: 0, fileCount: 0, newestModification: nil, partial: true) }
+        defer { fts_close(handle) }
+
+        var visited = 0
+        while let entry = fts_read(handle) {
+            visited += 1
+            if visited % 2048 == 0, isCancelled() { break }
+            let info = Int32(entry.pointee.fts_info)
+            switch info {
+            case FTS_DP:
+                continue  // a folder seen again after its contents
+            case FTS_DNR, FTS_ERR, FTS_NS:
+                partial = true
+                continue
+            default:
+                break
+            }
+            guard let stat = entry.pointee.fts_statp?.pointee else { continue }
+            if info == FTS_F {
+                total += Int64(stat.st_blocks) * 512
                 count += 1
             }
-            if let date = values.contentModificationDate, date > (newest ?? .distantPast) {
-                newest = date
+            let modified = stat.st_mtimespec
+            if newest.map({ modified.tv_sec > $0.tv_sec || (modified.tv_sec == $0.tv_sec && modified.tv_nsec > $0.tv_nsec) }) ?? true {
+                newest = modified
             }
         }
-        return DirectorySize(bytes: total, fileCount: count, newestModification: newest, partial: partialFlag.value)
+        let date = newest.map { Date(timeIntervalSince1970: TimeInterval($0.tv_sec) + TimeInterval($0.tv_nsec) / 1_000_000_000) }
+        return DirectorySize(bytes: total, fileCount: count, newestModification: date, partial: partial)
     }
 
     /// Sizes of the direct children of a folder, largest first. For the "explore" drill-down.
@@ -65,8 +88,4 @@ public enum DirectorySizer {
             .map { ($0, measure($0, isCancelled: isCancelled)) }
             .sorted { $0.size.bytes > $1.size.bytes }
     }
-}
-
-private final class PartialFlag: @unchecked Sendable {
-    var value = false
 }
