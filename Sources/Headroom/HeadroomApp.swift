@@ -41,7 +41,7 @@ struct MenuBarLabel: View {
     var body: some View {
         let level = model.assessment?.overall ?? .good
         HStack(spacing: 4) {
-            Image(systemName: level.menuSymbol)
+            Image(nsImage: MenuBarIcon.image(for: MenuBarIcon.State(rawValue: level.rawValue) ?? .good))
             if let sample = model.latest, model.assessment?.disk ?? .good > .good {
                 Text(Format.bytes(sample.diskFree))
             }
