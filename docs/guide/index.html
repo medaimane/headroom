@@ -6,6 +6,15 @@
   <title>Headroom Guide</title>
   <meta name="description" content="How to install and use Headroom: live health, storage and safe clean-ups, simulators and devices, worktrees, snapshots, the CLI and the safety model.">
   <meta name="theme-color" content="#0a111f">
+  <meta property="og:title" content="Headroom Guide">
+  <meta property="og:description" content="Install Headroom and use every part of it: live health, safe clean-ups, simulators, worktrees, snapshots and the CLI.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://medaimane.github.io/headroom/guide/">
+  <meta property="og:image" content="https://medaimane.github.io/headroom/assets/social-preview.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+  <meta property="og:image:alt" content="Headroom app icon with the tagline: Keep your dev Mac fast.">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../assets/site.css">
 </head>
@@ -97,6 +106,7 @@ make install              <span class="c"># optional: copies the app to ~/Applic
           <tr><td><code>make install</code></td><td>Copies the app to <code>~/Applications</code>.</td></tr>
           <tr><td><code>make release</code></td><td>Universal, ad-hoc signed <code>build/Headroom.zip</code> and its SHA-256, for a GitHub release.</td></tr>
           <tr><td><code>make icon</code></td><td>Re-renders the app icon from <code>docs/assets/icon.svg</code>.</td></tr>
+          <tr><td><code>make social</code></td><td>Re-renders the 1280×640 link preview image, <code>docs/assets/social-preview.png</code>.</td></tr>
           <tr><td><code>make site</code></td><td>Serves this website locally at <code>http://localhost:8765</code>.</td></tr>
         </tbody>
       </table></div>
@@ -281,6 +291,8 @@ swift run headroom-cli plan npm.cache gradle.caches   <span class="c"># what a c
       <p>Apple only skips that warning for apps notarized with a paid Developer ID. Headroom isn't yet, so you approve it once in Privacy &amp; Security. See <a href="#first-launch">First launch of a download</a>.</p>
       <h3>Why isn't it on the Mac App Store?</h3>
       <p>The App Store requires the sandbox, which would block reading developer folders and running <code>simctl</code> and <code>git</code>.</p>
+      <h3>Where can I ask a question or suggest something?</h3>
+      <p>In <a href="https://github.com/medaimane/headroom/discussions">Discussions</a>. Bugs and concrete feature requests go in <a href="https://github.com/medaimane/headroom/issues/new/choose">issues</a>.</p>
       <h3>A worktree says "unpushed" but I pushed it.</h3>
       <p>Headroom never fetches. Run <code>git fetch</code> in that repository and scan again.</p>
 
