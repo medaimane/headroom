@@ -17,7 +17,7 @@ Include what you found, how to reproduce it, and which version and macOS release
 Report it privately if Headroom could, for example:
 
 - delete or change anything outside its allow-listed cache locations, or follow a symlink out of them;
-- touch a git working tree, uncommitted work or a `.env*.local` file;
+- touch code in a git working tree, uncommitted work or a `.env*.local` file, or remove a `node_modules` that isn't ignored, belongs to a worktree with uncommitted or unpushed work, or is in use;
 - delete without the user's confirmation, or while dry run is on;
 - stop a process without confirmation;
 - read, show or store the contents of logs, env files, configs or command lines;

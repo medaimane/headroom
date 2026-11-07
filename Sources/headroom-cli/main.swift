@@ -11,6 +11,7 @@ headroom-cli: read-only reports from Headroom's core.
   storage      sizes of the known developer cache locations
   devices      simulator runtimes and devices, AVDs, system images, archives
   worktrees    git worktrees under ~/Developer with branch and push status
+  node-modules which worktrees' node_modules pass every removal check (checks only)
   plan [ids]   what a clean-up of the given cache ids would remove (dry run)
 """
 
@@ -104,6 +105,24 @@ case "worktrees":
               + "  " + path)
     }
     print("\n\(worktrees.count) worktrees. Push status is as of the last git fetch.")
+
+case "node-modules":
+    let worktrees = await WorktreeScanner(paths: paths).scan(roots: settings.worktreeRootURLs(home: paths.home))
+    let cleanup = NodeModulesCleanup(paths: paths, mode: .dryRun)
+    var removable: Int64 = 0
+    for info in worktrees.sorted(by: { ($0.nodeModulesBytes ?? 0) > ($1.nodeModulesBytes ?? 0) }) where (info.nodeModulesBytes ?? 0) > 0 {
+        let size = info.nodeModulesBytes ?? 0
+        let verdict: String
+        switch await cleanup.verify(worktree: info.path) {
+        case .success:
+            removable += size
+            verdict = "removable"
+        case .failure(let blocker):
+            verdict = "keep: " + blocker.description
+        }
+        print(lpad(Format.bytes(size), 9) + "  " + pad(String((info.branch ?? "detached").prefix(36)), 38) + verdict)
+    }
+    print("\nChecks only: nothing was removed. \(Format.bytes(removable)) of node_modules passes every check.")
 
 case "plan":
     let ids = arguments.count > 1 ? Array(arguments.dropFirst()) : StorageCatalog.cleanable.map(\.id)

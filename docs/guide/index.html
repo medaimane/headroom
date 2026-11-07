@@ -183,7 +183,18 @@ make install              <span class="c"># optional: copies the app to ~/Applic
         <li>commits not on any remote branch,</li>
         <li><code>node_modules</code> and Nx cache size, filled in after the git pass.</li>
       </ul>
-      <p>Git runs with <code>--no-optional-locks</code> and never fetches, commits or changes branches, so push status is as of your last fetch. The page is read-only: it shows the facts and you decide what to do with old worktrees.</p>
+      <p>Git runs with <code>--no-optional-locks</code> and never fetches, commits or changes branches, so push status is as of your last fetch.</p>
+      <h3 id="remove-node-modules">Removing node_modules</h3>
+      <p><code>node_modules</code> folders are often the biggest thing on a JavaScript developer's disk, and the package manager can rebuild them. Headroom can remove one worktree's <code>node_modules</code> at a time: click <strong>Remove…</strong> on its row, or right-click it. The button appears only when the last scan says it's safe; otherwise the row says <strong>Keep</strong>, with the reason on hover.</p>
+      <p>Right before removing, Headroom checks everything again on the live state:</p>
+      <ul>
+        <li>the worktree has no uncommitted changes (including new, untracked files) and no unpushed commits;</li>
+        <li>git ignores <code>node_modules</code> and tracks no files inside it;</li>
+        <li><code>node_modules</code> is a real folder, not a symlink, and holds no <code>.env*.local</code> file;</li>
+        <li>no running process has its working folder in the worktree or runs a program from its <code>node_modules</code> (stop Metro, Next.js, tests or agent sessions there first);</li>
+        <li>the worktree is inside your home folder.</li>
+      </ul>
+      <p>Only <code>&lt;worktree&gt;/node_modules</code> is removed: never your code, <code>.git</code>, other folders or the worktree itself. To bring it back, run the install command Headroom shows (<code>yarn install</code>, <code>pnpm install</code>, <code>bun install</code> or <code>npm install</code>, based on the lockfile). Every removal is recorded in History, and dry run applies.</p>
 
       <h2 id="snapshots">Workload snapshots</h2>
       <p>Name a workload (for example "1 sim + 1 emu + Metro + Next + 2 agents"), click <strong>Start recording</strong>, work as usual, then <strong>Stop and save</strong>. Headroom keeps the peaks: memory used, worst memory pressure, swap growth, CPU, thermal state, and how many devices and agent sessions were running. Over time this tells you what your Mac can carry before it starts swapping.</p>
@@ -216,6 +227,7 @@ swift run headroom-cli processes    <span class="c"># memory and CPU grouped by 
 swift run headroom-cli storage      <span class="c"># sizes of the known cache locations</span>
 swift run headroom-cli devices      <span class="c"># runtimes, simulators, AVDs, system images, archives</span>
 swift run headroom-cli worktrees    <span class="c"># branch and push status of every worktree</span>
+swift run headroom-cli node-modules <span class="c"># which node_modules pass every removal check (checks only)</span>
 swift run headroom-cli plan npm.cache gradle.caches   <span class="c"># what a clean-up would remove</span></code></pre>
       <p>Cache ids for <code>plan</code> are listed in the <a href="#caches">cache catalog</a>. With no ids, <code>plan</code> covers every cleanable cache.</p>
 
@@ -225,10 +237,10 @@ swift run headroom-cli plan npm.cache gradle.caches   <span class="c"># what a c
         <li><strong>Nothing is deleted without your click</strong>, and nothing is deleted automatically.</li>
         <li><strong>Allow-list only.</strong> A target must be strictly inside a catalog folder. Paths with <code>..</code> are rejected, and a catalog folder that is itself a symlink pointing elsewhere is refused. Symlinks inside are removed as links, never followed.</li>
         <li><strong>Checked twice:</strong> when the plan is made and again right before each removal.</li>
-        <li><strong>Your work is protected.</strong> Nothing inside a git working tree, nothing named <code>.env*.local</code>, and no folder that contains one.</li>
+        <li><strong>Your work is protected.</strong> Never your code, uncommitted work, unpushed commits, anything named <code>.env*.local</code> or a folder that contains one. Inside a repository, the only thing Headroom can remove is an ignored <code>node_modules</code> in a clean, pushed worktree with nothing running from it, after your confirmation (<a href="#remove-node-modules">details</a>).</li>
         <li><strong>Running tools win.</strong> A cache is skipped while the tool that uses it is running.</li>
         <li><strong>Per-item confirmation</strong> for simulators, AVDs, system images and archives. Docker data is shown only.</li>
-        <li><strong>Repositories are read-only.</strong></li>
+        <li><strong>Git is read-only.</strong> It never fetches, commits, changes branches or removes worktrees.</li>
         <li><strong>Processes are never stopped.</strong> Headroom reports on agents, simulators, emulators and dev servers; it doesn't quit them.</li>
         <li><strong>Security settings are never touched</strong>: SIP, Gatekeeper, FileVault, the firewall, XProtect and updates. There's no hidden sudo.</li>
         <li><strong>Debug builds can't delete on your Mac.</strong> They force dry run unless pointed at a fixture home in a temporary folder with <code>HEADROOM_HOME</code>.</li>

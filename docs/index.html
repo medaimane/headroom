@@ -111,8 +111,8 @@
             <p>Simulator runtimes and devices, Android AVDs and system images, and Xcode archives, with size and last use. Each one needs its own confirmation.</p>
           </article>
           <article class="card">
-            <h3><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="9" r="2.5"/><path d="M6 8.5v7"/><path d="M18 11.5c0 3-3 4-7 5"/></svg></span>Worktree report</h3>
-            <p>Every git worktree under ~/Developer with branch, uncommitted changes, unpushed commits and node_modules size. Read-only, so you decide.</p>
+            <h3><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="9" r="2.5"/><path d="M6 8.5v7"/><path d="M18 11.5c0 3-3 4-7 5"/></svg></span>Worktrees and node_modules</h3>
+            <p>Every git worktree under ~/Developer with branch, uncommitted changes, unpushed commits and node_modules size. Remove node_modules from clean, pushed worktrees, one at a time.</p>
           </article>
           <article class="card">
             <h3><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></span>Workload snapshots</h3>
@@ -152,7 +152,7 @@
         <ul class="rules">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><div><b>Nothing is deleted without your click</b><span>And nothing is ever deleted automatically or on a schedule.</span></div></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><div><b>Only allow-listed caches</b><span>Each target is checked when the plan is made and again right before removal. No <code>..</code>, no symlink tricks.</span></div></li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><div><b>Your work is off limits</b><span>Never inside a git working tree, never a <code>.env*.local</code> file, and repositories are read-only.</span></div></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><div><b>Your work is off limits</b><span>Never your code, uncommitted work or a <code>.env*.local</code> file. Inside a repository the one thing it can remove is an ignored <code>node_modules</code>, in a worktree that's clean and pushed, after you confirm.</span></div></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><div><b>Bigger things, one at a time</b><span>Simulators go through <code>xcrun simctl</code>. AVDs, images and archives go to the Trash so you can put them back.</span></div></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><div><b>Logs stay closed</b><span>Logs, env files and configs are shown by size and location only. They may hold private data.</span></div></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><div><b>No network, no telemetry, no sudo</b><span>It never phones home and never touches SIP, Gatekeeper, FileVault, the firewall or updates.</span></div></li>
@@ -191,7 +191,7 @@ make install</code></pre>
         <div class="faq">
           <details>
             <summary>Will Headroom delete my work?</summary>
-            <p>No. It only cleans developer caches from a fixed list, all of which their tools rebuild by themselves. It never touches anything inside a git working tree or any <code>.env*.local</code> file. Every clean-up first shows what goes, how big it is and how it rebuilds, and waits for your click. Dry run is on until you turn it off.</p>
+            <p>No. It only cleans developer caches from a fixed list, all of which their tools rebuild by themselves. It never touches your code, uncommitted work or any <code>.env*.local</code> file. Inside a repository, the only thing it can remove is a <code>node_modules</code> folder that git ignores, in a worktree that's clean and pushed with nothing running from it, and only after you confirm. Every clean-up first shows what goes, how big it is and how it rebuilds, and waits for your click. Dry run is on until you turn it off.</p>
           </details>
           <details>
             <summary>Does it clean things automatically?</summary>
