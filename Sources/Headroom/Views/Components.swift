@@ -18,13 +18,6 @@ extension HealthLevel {
         }
     }
 
-    var menuSymbol: String {
-        switch self {
-        case .good: "gauge.with.dots.needle.33percent"
-        case .warning: "exclamationmark.triangle"
-        case .critical: "exclamationmark.octagon.fill"
-        }
-    }
 }
 
 struct StatusDot: View {
