@@ -51,6 +51,7 @@
         <ul>
           <li><a href="#menu-bar">Menu bar</a></li>
           <li><a href="#health">Health</a></li>
+          <li><a href="#dev-environment">Dev environment</a></li>
           <li><a href="#storage">Storage and clean-up</a></li>
           <li><a href="#devices">Simulators and devices</a></li>
           <li><a href="#explore">Explore disk</a></li>
@@ -77,7 +78,7 @@
     <main class="prose">
       <h1>Headroom guide</h1>
       <p>Headroom is a menu bar app for macOS 14 and later. It reports freely and changes nothing until you review and confirm. This guide covers installing it, every part of the app, and the rules it follows.</p>
-      <p class="fine">This guide describes Headroom <span class="version" data-version="0.1.1">v0.1.1</span>, the latest release. See <a href="https://github.com/medaimane/headroom/blob/main/CHANGELOG.md">what's new</a>; guides for older versions are in the <code>docs/</code> folder of each <a href="https://github.com/medaimane/headroom/tags">release tag</a>.</p>
+      <p class="fine">This guide describes Headroom <span class="version" data-version="0.2.0">v0.2.0</span>, the latest release. See <a href="https://github.com/medaimane/headroom/blob/main/CHANGELOG.md">what's new</a>; guides for older versions are in the <code>docs/</code> folder of each <a href="https://github.com/medaimane/headroom/tags">release tag</a>.</p>
 
       <h2 id="install">Install</h2>
       <p>Headroom runs on macOS 14 or later, on Apple silicon and Intel Macs. There are two ways to get it.</p>
@@ -131,7 +132,7 @@ make install              <span class="c"># optional: copies the app to ~/Applic
       </ol>
 
       <h2 id="menu-bar">Menu bar</h2>
-      <p>The menu bar icon shows the overall state. It turns into a warning when disk, memory pressure, swap or temperature needs attention, and it shows free disk space when disk is the problem. The quick view has free disk, memory pressure, swap, CPU and thermal state, plus the groups using the most memory. The <strong>ⓘ</strong> button opens <strong>About Headroom</strong>, which shows the version you're running; Settings shows it too.</p>
+      <p>The menu bar icon is the Headroom mark: three bars under a ceiling. It gains an outlined <strong>!</strong> badge when disk, memory pressure, swap or temperature needs attention and a filled one when it's critical, and it shows free disk space when disk is the problem. The quick view has free disk, memory pressure, swap, CPU and thermal state, plus the groups using the most memory. The <strong>ⓘ</strong> button opens <strong>About Headroom</strong>, which shows the version you're running; Settings shows it too.</p>
 
       <h2 id="health">Health</h2>
       <p>Headroom samples the system every 5 seconds (you can change this) and keeps an hour of charts.</p>
@@ -144,6 +145,23 @@ make install              <span class="c"># optional: copies the app to ~/Applic
       <h3>Grouped processes</h3>
       <p>Processes are grouped by what you're running: iOS Simulator, Android emulator, Claude Code agents, the Claude app, Metro, Next.js, builds and tests (Nx, Jest, TypeScript, ESLint, Playwright…), other Node, Watchman, Gradle, Xcode, IDEs, Docker and VMs, browsers, and system. Agents, Metro and Next.js are split by project folder, so each worktree gets its own row.</p>
       <div class="callout"><p>To recognise Metro or Next.js, Headroom looks at a process's command line. It's used only for that and is never stored or shown. Some system processes can't be read without admin rights; Headroom counts them instead of asking for a password.</p></div>
+
+      <h2 id="dev-environment">Dev environment</h2>
+      <p>What's running for development right now, refreshed every few seconds while the page is open:</p>
+      <ul>
+        <li><strong>iOS simulators</strong> that are booted, with the memory all simulator processes use together;</li>
+        <li><strong>Android emulators</strong>, with their console port (<code>emulator-5554</code>);</li>
+        <li><strong>dev servers and the ports they listen on</strong>, such as Metro on 8081 or Next.js on 3000, with their project folder. Ports are read from your own processes with macOS's process information; Headroom reads no traffic;</li>
+        <li><strong>Claude Code agent sessions</strong>, one row per worktree.</li>
+      </ul>
+      <h3>Stopping something</h3>
+      <p>Simulators, emulators and dev servers have a <strong>Stop…</strong> (or <strong>Shut down…</strong>) button. Each needs its own confirmation, which shows what stops and how to start it again. Headroom only ever asks politely:</p>
+      <ul>
+        <li>a simulator gets <code>xcrun simctl shutdown</code>, a normal shutdown;</li>
+        <li>an emulator gets <code>adb emu kill</code> when the Android SDK's <code>adb</code> is installed, otherwise a normal stop request;</li>
+        <li>a dev server gets a normal stop request (SIGTERM), so it can clean up.</li>
+      </ul>
+      <p>It never force-quits, never stops other users' or macOS processes, and checks right before stopping that the process is still the same one (a new process that reused the ID is never touched). <strong>Agent sessions are shown but can't be stopped from Headroom</strong>, so no agent loses work; stop one from its own terminal. Every stop is recorded in History, and dry run applies.</p>
 
       <h2 id="storage">Storage and clean-up</h2>
       <p>The Storage page shows free space against your target (100 GB by default) and the size of every location in the <a href="#caches">cache catalog</a>. Locations marked <em>info only</em> (Trash, Logs, all app caches, Claude Code data) are shown so you know where space goes, but Headroom never cleans them.</p>
@@ -183,7 +201,18 @@ make install              <span class="c"># optional: copies the app to ~/Applic
         <li>commits not on any remote branch,</li>
         <li><code>node_modules</code> and Nx cache size, filled in after the git pass.</li>
       </ul>
-      <p>Git runs with <code>--no-optional-locks</code> and never fetches, commits or changes branches, so push status is as of your last fetch. The page is read-only: it shows the facts and you decide what to do with old worktrees.</p>
+      <p>Git runs with <code>--no-optional-locks</code> and never fetches, commits or changes branches, so push status is as of your last fetch.</p>
+      <h3 id="remove-node-modules">Removing node_modules</h3>
+      <p><code>node_modules</code> folders are often the biggest thing on a JavaScript developer's disk, and the package manager can rebuild them. Headroom can remove one worktree's <code>node_modules</code> at a time: click <strong>Remove…</strong> on its row, or right-click it. The button appears only when the last scan says it's safe; otherwise the row says <strong>Keep</strong>, with the reason on hover.</p>
+      <p>Right before removing, Headroom checks everything again on the live state:</p>
+      <ul>
+        <li>the worktree has no uncommitted changes (including new, untracked files) and no unpushed commits;</li>
+        <li>git ignores <code>node_modules</code> and tracks no files inside it;</li>
+        <li><code>node_modules</code> is a real folder, not a symlink, and holds no <code>.env*.local</code> file;</li>
+        <li>no running process has its working folder in the worktree or runs a program from its <code>node_modules</code> (stop Metro, Next.js, tests or agent sessions there first);</li>
+        <li>the worktree is inside your home folder.</li>
+      </ul>
+      <p>Only <code>&lt;worktree&gt;/node_modules</code> is removed: never your code, <code>.git</code>, other folders or the worktree itself. To bring it back, run the install command Headroom shows (<code>yarn install</code>, <code>pnpm install</code>, <code>bun install</code> or <code>npm install</code>, based on the lockfile). Every removal is recorded in History, and dry run applies.</p>
 
       <h2 id="snapshots">Workload snapshots</h2>
       <p>Name a workload (for example "1 sim + 1 emu + Metro + Next + 2 agents"), click <strong>Start recording</strong>, work as usual, then <strong>Stop and save</strong>. Headroom keeps the peaks: memory used, worst memory pressure, swap growth, CPU, thermal state, and how many devices and agent sessions were running. Over time this tells you what your Mac can carry before it starts swapping.</p>
@@ -213,9 +242,11 @@ make install              <span class="c"># optional: copies the app to ~/Applic
       <p><code>headroom-cli</code> prints the same reports as the app. It's read-only: even <code>plan</code> is a dry run.</p>
 <pre><code>swift run headroom-cli health       <span class="c"># memory, swap, CPU, thermal state, disk</span>
 swift run headroom-cli processes    <span class="c"># memory and CPU grouped by what's running</span>
+swift run headroom-cli dev          <span class="c"># simulators, emulators, dev servers with ports, agents</span>
 swift run headroom-cli storage      <span class="c"># sizes of the known cache locations</span>
 swift run headroom-cli devices      <span class="c"># runtimes, simulators, AVDs, system images, archives</span>
 swift run headroom-cli worktrees    <span class="c"># branch and push status of every worktree</span>
+swift run headroom-cli node-modules <span class="c"># which node_modules pass every removal check (checks only)</span>
 swift run headroom-cli plan npm.cache gradle.caches   <span class="c"># what a clean-up would remove</span></code></pre>
       <p>Cache ids for <code>plan</code> are listed in the <a href="#caches">cache catalog</a>. With no ids, <code>plan</code> covers every cleanable cache.</p>
 
@@ -225,11 +256,11 @@ swift run headroom-cli plan npm.cache gradle.caches   <span class="c"># what a c
         <li><strong>Nothing is deleted without your click</strong>, and nothing is deleted automatically.</li>
         <li><strong>Allow-list only.</strong> A target must be strictly inside a catalog folder. Paths with <code>..</code> are rejected, and a catalog folder that is itself a symlink pointing elsewhere is refused. Symlinks inside are removed as links, never followed.</li>
         <li><strong>Checked twice:</strong> when the plan is made and again right before each removal.</li>
-        <li><strong>Your work is protected.</strong> Nothing inside a git working tree, nothing named <code>.env*.local</code>, and no folder that contains one.</li>
+        <li><strong>Your work is protected.</strong> Never your code, uncommitted work, unpushed commits, anything named <code>.env*.local</code> or a folder that contains one. Inside a repository, the only thing Headroom can remove is an ignored <code>node_modules</code> in a clean, pushed worktree with nothing running from it, after your confirmation (<a href="#remove-node-modules">details</a>).</li>
         <li><strong>Running tools win.</strong> A cache is skipped while the tool that uses it is running.</li>
         <li><strong>Per-item confirmation</strong> for simulators, AVDs, system images and archives. Docker data is shown only.</li>
-        <li><strong>Repositories are read-only.</strong></li>
-        <li><strong>Processes are never stopped.</strong> Headroom reports on agents, simulators, emulators and dev servers; it doesn't quit them.</li>
+        <li><strong>Git is read-only.</strong> It never fetches, commits, changes branches or removes worktrees.</li>
+        <li><strong>Processes stop only when you confirm.</strong> Simulators, emulators and dev servers can be stopped one at a time after a confirmation, with a normal stop request, never a force-quit, and only if it's still the same process. Agent sessions are never stopped by Headroom.</li>
         <li><strong>Security settings are never touched</strong>: SIP, Gatekeeper, FileVault, the firewall, XProtect and updates. There's no hidden sudo.</li>
         <li><strong>Debug builds can't delete on your Mac.</strong> They force dry run unless pointed at a fixture home in a temporary folder with <code>HEADROOM_HOME</code>.</li>
       </ul>
@@ -353,7 +384,7 @@ git switch dev &amp;&amp; git merge main &amp;&amp; git push</code></pre>
   <footer class="site-footer">
     <div class="wrap">
       <a class="brand" href="../"><img src="../assets/mark.svg" alt="">Headroom</a>
-      <span><span class="version" data-version="0.1.1">v0.1.1</span> · MIT licensed · made by Mohamed Aimane Skhairi</span>
+      <span><span class="version" data-version="0.2.0">v0.2.0</span> · MIT licensed · made by Mohamed Aimane Skhairi</span>
       <nav aria-label="Footer">
         <a href="../">Home</a>
         <a href="https://github.com/medaimane/headroom/blob/main/CHANGELOG.md">What's new</a>

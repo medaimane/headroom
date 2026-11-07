@@ -2,13 +2,14 @@ import HeadroomCore
 import SwiftUI
 
 enum Section: String, CaseIterable, Identifiable {
-    case health, storage, devices, explore, worktrees, snapshots, history
+    case health, devEnvironment, storage, devices, explore, worktrees, snapshots, history
 
     var id: String { rawValue }
 
     var title: String {
         switch self {
         case .health: "Health"
+        case .devEnvironment: "Dev environment"
         case .storage: "Storage"
         case .devices: "Simulators & devices"
         case .explore: "Explore disk"
@@ -21,6 +22,7 @@ enum Section: String, CaseIterable, Identifiable {
     var symbol: String {
         switch self {
         case .health: "waveform.path.ecg"
+        case .devEnvironment: "terminal"
         case .storage: "internaldrive"
         case .devices: "iphone.and.arrow.forward"
         case .explore: "folder"
@@ -55,6 +57,7 @@ struct MainWindow: View {
         } detail: {
             switch selection ?? .health {
             case .health: HealthView()
+            case .devEnvironment: DevEnvironmentView()
             case .storage: StorageView()
             case .devices: DevItemsView()
             case .explore: ExploreView()

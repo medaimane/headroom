@@ -19,7 +19,7 @@
 
 - [ ] Nothing is deleted or changed without the user's review and click
 - [ ] Any removal goes through `PathGuard` and stays inside allow-listed locations
-- [ ] Doesn't touch git working trees, uncommitted work or `.env*.local` files
+- [ ] Doesn't touch git working trees (beyond the existing node_modules rule), uncommitted work or `.env*.local` files
 - [ ] Doesn't stop processes without confirmation
 - [ ] Doesn't read or show the contents of logs, env files, configs or command lines
 - [ ] No network calls, telemetry or hidden sudo

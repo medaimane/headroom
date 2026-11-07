@@ -14,13 +14,14 @@ Native SwiftUI, no dependencies, no network, no telemetry. It uses about 20 MB o
 
 | Area | What you get |
 |---|---|
-| **Menu bar** | Free disk, memory pressure, swap, CPU and thermal state at a glance, with the top memory users. The icon turns into a warning when something needs attention. The ⓘ button shows the version (About Headroom). |
+| **Menu bar** | Free disk, memory pressure, swap, CPU and thermal state at a glance, with the top memory users. The icon is the Headroom mark, with a badge when something needs attention. The ⓘ button shows the version (About Headroom). |
 | **Health** | Live charts for the last hour, plus memory and CPU grouped by what's running: iOS Simulator, Android emulator, Claude Code agents (one row per worktree), Metro, Next.js, Nx/builds/tests, Gradle, Xcode, Docker/VMs, browsers, and more. |
+| **Dev environment** | Booted simulators, running emulators, dev servers with the ports they listen on (Metro 8081, Next.js 3000, …) and agent sessions per worktree. Stop a simulator, emulator or dev server after its own confirmation, with a normal stop request; agent sessions are shown only. |
 | **Storage** | Free space against a target (100 GB by default), and the size of every known developer cache: DerivedData, DeviceSupport, Gradle, npm, Yarn, pnpm, CocoaPods, Metro, Playwright, Homebrew, … |
 | **Safe clean-up** | Pick caches, review exactly what goes and how it rebuilds, then confirm. Dry run is on until you turn it off. |
 | **Simulators & devices** | Simulator runtimes and devices, Android AVDs and system images, and Xcode archives, with size and last use. Each item is removed only after its own confirmation. |
 | **Explore disk** | A read-only, size-sorted drill-down of your home folder. |
-| **Worktrees** | Every git worktree under `~/Developer`: branch, uncommitted changes, unpushed commits, last commit, node_modules and Nx cache size. Read-only. |
+| **Worktrees** | Every git worktree under `~/Developer`: branch, uncommitted changes, unpushed commits, last commit, node_modules and Nx cache size. Remove `node_modules` from clean, pushed worktrees, one at a time after confirming. |
 | **Workload snapshots** | Record a named workload (for example "1 sim + 1 emu + Metro + Next + 2 agents") and keep its peaks: memory, pressure, swap growth, CPU, thermal state. |
 | **History** | Every action and settings change, when it ran, its size and how to undo it. Exportable as Markdown. |
 | **Warnings** | Notifications for low disk, sustained memory pressure, heavy swap and throttling (debounced). |
@@ -30,12 +31,12 @@ Native SwiftUI, no dependencies, no network, no telemetry. It uses about 20 MB o
 - **Nothing is deleted without your click**, and nothing is deleted automatically.
 - **Only allow-listed caches are cleaned** ([`StorageCatalog.swift`](Sources/HeadroomCore/Storage/StorageCatalog.swift)). Each item is checked by [`PathGuard`](Sources/HeadroomCore/Cleanup/PathGuard.swift) when the plan is made and again right before removal:
   - it must be strictly inside an allow-listed folder (no `..`, no symlinked cache folder pointing elsewhere);
-  - it must not be inside a git working tree;
+  - it must not be inside a git working tree (the one exception: an ignored `node_modules` in a clean, pushed worktree with nothing running from it, removed only after its own confirmation and re-checked right before);
   - it must not be or contain a `.env*.local` file;
   - symlinks are removed as links, never followed.
 - **A cache is skipped while its tool runs** (for example DerivedData while `xcodebuild` runs, and Metro's cache while Metro runs).
 - **Anything that isn't a cache needs its own confirmation per item:** simulator runtimes and devices go through `xcrun simctl`, and AVDs, system images and archives go to the Trash so you can put them back. Docker images and volumes are shown only.
-- **Repositories are read-only.** Git runs with `--no-optional-locks` and never fetches, commits or changes branches.
+- **Git is read-only.** Git runs with `--no-optional-locks` and never fetches, commits, changes branches or removes worktrees.
 - **Logs, env files and configs are never opened.** Logs are shown by size only. Process command lines are used only to recognize Metro, Next.js and so on, and are never stored or shown.
 - **No network calls, no telemetry, no sudo.**
 - **Debug builds can't delete anything on your Mac:** they force dry run unless pointed at a fixture home in a temporary folder (`HEADROOM_HOME`).

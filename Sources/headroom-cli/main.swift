@@ -8,9 +8,11 @@ headroom-cli: read-only reports from Headroom's core.
 
   health       memory, swap, CPU, thermal state and disk
   processes    memory and CPU grouped by what's running
+  dev          running simulators, emulators, dev servers with ports, and agent sessions
   storage      sizes of the known developer cache locations
   devices      simulator runtimes and devices, AVDs, system images, archives
   worktrees    git worktrees under ~/Developer with branch and push status
+  node-modules which worktrees' node_modules pass every removal check (checks only)
   plan [ids]   what a clean-up of the given cache ids would remove (dry run)
 """
 
@@ -54,6 +56,29 @@ case "processes":
             print("    " + pad(String(sub.title.prefix(40)), 42) + lpad(Format.memory(sub.memory), 10))
         }
     }
+
+case "dev":
+    let records = ProcessSampler().sample().records
+    var booted: [(udid: String, name: String, runtime: String)] = []
+    if let output = try? await ProcessCommandRunner().run(ToolLocator.xcrun, ["simctl", "list", "devices", "booted", "-j"], timeout: 30), output.succeeded {
+        booted = (try? DevEnvironment.bootedSimulators(from: output.stdout)) ?? []
+    }
+    let env = DevEnvironment.snapshot(records: records, bootedSimulators: booted)
+    func show(_ title: String, _ items: [RunningItem]) {
+        print("\n\(title)")
+        if items.isEmpty { print("  none") }
+        for item in items {
+            let ports = item.ports.map { port in ListeningPorts.label(for: port).map { "\(port) (\($0))" } ?? "\(port)" }.joined(separator: ", ")
+            print("  " + pad(String(item.name.prefix(34)), 36) + pad(String(item.detail.prefix(30)), 32)
+                  + lpad(item.memory > 0 ? Format.memory(item.memory) : "", 9) + (ports.isEmpty ? "" : "  ports " + ports)
+                  + (item.stopBlockedReason == nil ? "" : "  [shown only]"))
+        }
+    }
+    show("iOS simulators (\(Format.memory(env.simulatorMemory)) together)", env.simulators)
+    show("Android emulators", env.emulators)
+    show("Dev servers", env.servers)
+    show("Agent sessions", env.agents)
+    print("\nReport only: nothing was stopped.")
 
 case "storage":
     var total: Int64 = 0
@@ -104,6 +129,24 @@ case "worktrees":
               + "  " + path)
     }
     print("\n\(worktrees.count) worktrees. Push status is as of the last git fetch.")
+
+case "node-modules":
+    let worktrees = await WorktreeScanner(paths: paths).scan(roots: settings.worktreeRootURLs(home: paths.home))
+    let cleanup = NodeModulesCleanup(paths: paths, mode: .dryRun)
+    var removable: Int64 = 0
+    for info in worktrees.sorted(by: { ($0.nodeModulesBytes ?? 0) > ($1.nodeModulesBytes ?? 0) }) where (info.nodeModulesBytes ?? 0) > 0 {
+        let size = info.nodeModulesBytes ?? 0
+        let verdict: String
+        switch await cleanup.verify(worktree: info.path) {
+        case .success:
+            removable += size
+            verdict = "removable"
+        case .failure(let blocker):
+            verdict = "keep: " + blocker.description
+        }
+        print(lpad(Format.bytes(size), 9) + "  " + pad(String((info.branch ?? "detached").prefix(36)), 38) + verdict)
+    }
+    print("\nChecks only: nothing was removed. \(Format.bytes(removable)) of node_modules passes every check.")
 
 case "plan":
     let ids = arguments.count > 1 ? Array(arguments.dropFirst()) : StorageCatalog.cleanable.map(\.id)

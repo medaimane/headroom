@@ -42,7 +42,7 @@
     <section class="hero">
       <div class="wrap">
         <div>
-          <a class="eyebrow" href="https://github.com/medaimane/headroom/blob/main/CHANGELOG.md"><span class="eyebrow-tag">New</span><span class="version" data-version="0.1.1">v0.1.1</span> is out · see what's new<span aria-hidden="true">→</span></a>
+          <a class="eyebrow" href="https://github.com/medaimane/headroom/blob/main/CHANGELOG.md"><span class="eyebrow-tag">New</span><span class="version" data-version="0.2.0">v0.2.0</span> is out · see what's new<span aria-hidden="true">→</span></a>
           <h1>Keep your dev Mac fast. Keep the <span class="room">headroom</span>.</h1>
           <p class="lede">Headroom is a small menu bar app that shows what's filling your disk and memory while you run simulators, emulators, dev servers and agent sessions. It cleans rebuildable developer caches, but only after you've seen exactly what goes and clicked to confirm.</p>
           <div class="cta">
@@ -55,7 +55,7 @@
         <div class="mock" role="img" aria-label="The Headroom menu bar panel: disk free, memory pressure, memory used, swap, CPU and thermal state, then the five biggest memory users grouped by what's running">
           <div class="mock-bar">
             <span>Fri 9:41</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 17a8.5 8.5 0 1 1 15 0"/><path d="M12 13l-3.5-4"/><circle cx="12" cy="13.5" r="1.2" fill="currentColor"/></svg>
+            <svg viewBox="0 0 18 18" fill="currentColor" aria-hidden="true"><rect x="2" y="2.5" width="14" height="1.8" rx="0.9"/><rect x="2" y="10.5" width="3.6" height="5" rx="1"/><rect x="7.2" y="7.9" width="3.6" height="7.6" rx="1"/><rect x="12.4" y="5.5" width="3.6" height="10" rx="1"/></svg>
           </div>
           <div class="mock-panel">
             <div class="mp-head"><b>Headroom</b><span><i class="sd"></i>All good</span></div>
@@ -92,11 +92,11 @@
         <div class="grid three">
           <article class="card">
             <h3><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span>Live health</h3>
-            <p>Memory pressure, swap, CPU, thermal state and free disk, with an hour of charts and a menu bar icon that turns into a warning when something needs you.</p>
+            <p>Memory pressure, swap, CPU, thermal state and free disk, with an hour of charts, memory grouped by simulator, emulator, agent, Metro and Next.js, and a menu bar icon that warns you.</p>
           </article>
           <article class="card">
-            <h3><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/></svg></span>Grouped by what you run</h3>
-            <p>Memory and CPU per iOS Simulator, Android emulator, Claude Code agent (one row per worktree), Metro, Next.js, Nx, Gradle, Xcode, Docker and browsers.</p>
+            <h3><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/></svg></span>Dev environment</h3>
+            <p>Running simulators, emulators, dev servers with their ports (8081, 3000…) and agent sessions. Stop a simulator, emulator or server after confirming.</p>
           </article>
           <article class="card">
             <h3><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></span>Storage you can trust</h3>
@@ -111,8 +111,8 @@
             <p>Simulator runtimes and devices, Android AVDs and system images, and Xcode archives, with size and last use. Each one needs its own confirmation.</p>
           </article>
           <article class="card">
-            <h3><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="9" r="2.5"/><path d="M6 8.5v7"/><path d="M18 11.5c0 3-3 4-7 5"/></svg></span>Worktree report</h3>
-            <p>Every git worktree under ~/Developer with branch, uncommitted changes, unpushed commits and node_modules size. Read-only, so you decide.</p>
+            <h3><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="9" r="2.5"/><path d="M6 8.5v7"/><path d="M18 11.5c0 3-3 4-7 5"/></svg></span>Worktrees and node_modules</h3>
+            <p>Every git worktree under ~/Developer with branch, uncommitted changes, unpushed commits and node_modules size. Remove node_modules from clean, pushed worktrees, one at a time.</p>
           </article>
           <article class="card">
             <h3><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></span>Workload snapshots</h3>
@@ -152,7 +152,7 @@
         <ul class="rules">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><div><b>Nothing is deleted without your click</b><span>And nothing is ever deleted automatically or on a schedule.</span></div></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><div><b>Only allow-listed caches</b><span>Each target is checked when the plan is made and again right before removal. No <code>..</code>, no symlink tricks.</span></div></li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><div><b>Your work is off limits</b><span>Never inside a git working tree, never a <code>.env*.local</code> file, and repositories are read-only.</span></div></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><div><b>Your work is off limits</b><span>Never your code, uncommitted work or a <code>.env*.local</code> file. Inside a repository the one thing it can remove is an ignored <code>node_modules</code>, in a worktree that's clean and pushed, after you confirm.</span></div></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><div><b>Bigger things, one at a time</b><span>Simulators go through <code>xcrun simctl</code>. AVDs, images and archives go to the Trash so you can put them back.</span></div></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><div><b>Logs stay closed</b><span>Logs, env files and configs are shown by size and location only. They may hold private data.</span></div></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg><div><b>No network, no telemetry, no sudo</b><span>It never phones home and never touches SIP, Gatekeeper, FileVault, the firewall or updates.</span></div></li>
@@ -191,7 +191,7 @@ make install</code></pre>
         <div class="faq">
           <details>
             <summary>Will Headroom delete my work?</summary>
-            <p>No. It only cleans developer caches from a fixed list, all of which their tools rebuild by themselves. It never touches anything inside a git working tree or any <code>.env*.local</code> file. Every clean-up first shows what goes, how big it is and how it rebuilds, and waits for your click. Dry run is on until you turn it off.</p>
+            <p>No. It only cleans developer caches from a fixed list, all of which their tools rebuild by themselves. It never touches your code, uncommitted work or any <code>.env*.local</code> file. Inside a repository, the only thing it can remove is a <code>node_modules</code> folder that git ignores, in a worktree that's clean and pushed with nothing running from it, and only after you confirm. Every clean-up first shows what goes, how big it is and how it rebuilds, and waits for your click. Dry run is on until you turn it off.</p>
           </details>
           <details>
             <summary>Does it clean things automatically?</summary>
@@ -225,7 +225,7 @@ make install</code></pre>
   <footer class="site-footer">
     <div class="wrap">
       <a class="brand" href="./"><img src="assets/mark.svg" alt="">Headroom</a>
-      <span><span class="version" data-version="0.1.1">v0.1.1</span> · MIT licensed · made by Mohamed Aimane Skhairi</span>
+      <span><span class="version" data-version="0.2.0">v0.2.0</span> · MIT licensed · made by Mohamed Aimane Skhairi</span>
       <nav aria-label="Footer">
         <a href="https://github.com/medaimane/headroom/blob/main/CHANGELOG.md">What's new</a>
         <a href="guide/">Guide</a>
