@@ -152,6 +152,11 @@ struct SettingsView: View {
                     .font(.caption).foregroundStyle(.secondary)
                 LabeledContent("Data folder", value: model.paths.supportDirectory.path.abbreviatingHome(model.paths.home))
             }
+            SwiftUI.Section("About") {
+                LabeledContent(AppInfo.versionLabel) {
+                    Button("About Headroom") { AppInfo.showAboutPanel() }
+                }
+            }
         }
         .formStyle(.grouped)
         .frame(width: 520, height: 620)
