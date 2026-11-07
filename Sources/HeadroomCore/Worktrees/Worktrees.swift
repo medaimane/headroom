@@ -163,10 +163,36 @@ public struct WorktreeScanner: Sendable {
             let entries = GitParsers.worktreeList(list.stdout).filter { !$0.isBare }
             for (index, entry) in entries.enumerated() where !seen.contains(entry.path) {
                 seen.insert(entry.path)
-                results.append(await inspect(entry, repository: repo.lastPathComponent, isMain: index == 0, measureFolders: measureFolders))
+                results.append(await inspect(entry, repository: repo.lastPathComponent, isMain: index == 0, measureFolders: false))
             }
         }
-        return results
+        return measureFolders ? await Self.withFolderSizes(results) : results
+    }
+
+    /// How many worktrees are measured at once. Measuring is mostly waiting on file-system
+    /// metadata, so a few in parallel finish much sooner without keeping the CPU busy.
+    public static let folderSizeConcurrency = 6
+
+    /// Adds folder sizes to many worktrees, `folderSizeConcurrency` at a time, keeping the input order.
+    /// `onEach` is called as each one finishes, so a UI can fill in sizes progressively.
+    public static func withFolderSizes(_ worktrees: [WorktreeInfo], onEach: (@Sendable (WorktreeInfo) async -> Void)? = nil) async -> [WorktreeInfo] {
+        var measured = worktrees
+        await withTaskGroup(of: (Int, WorktreeInfo).self) { group in
+            var next = 0
+            func startNext() {
+                guard next < worktrees.count else { return }
+                let index = next, info = worktrees[index]
+                next += 1
+                group.addTask(priority: .utility) { (index, withFolderSizes(info)) }
+            }
+            for _ in 0..<folderSizeConcurrency { startNext() }
+            while let (index, info) = await group.next() {
+                measured[index] = info
+                await onEach?(info)
+                startNext()
+            }
+        }
+        return measured
     }
 
     func inspect(_ entry: GitParsers.WorktreeEntry, repository: String, isMain: Bool, measureFolders: Bool) async -> WorktreeInfo {

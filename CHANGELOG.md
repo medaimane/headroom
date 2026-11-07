@@ -6,6 +6,9 @@ Downloads are on the [releases page](https://github.com/medaimane/headroom/relea
 
 ## [Unreleased]
 
+### Changed
+- **Faster scans:** folder sizes are measured with a lighter file walk, and worktrees six at a time. On a Mac with 39 worktrees the full worktree report went from about 95 to 30 seconds, and storage and device scans are quicker too.
+
 ## [0.1.0] - 2026-11-07
 
 The first public release.
