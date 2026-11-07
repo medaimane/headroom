@@ -44,6 +44,8 @@ final class AppModel {
     private(set) var worktrees: [WorktreeInfo] = []
     private(set) var scanningWorktrees = false
     private(set) var lastWorktreeScan: Date?
+    private(set) var removingNodeModules: Set<String> = []
+    var lastNodeModulesResult: NodeModulesCleanup.Result?
 
     // Snapshots and history
     private(set) var recording: SnapshotAccumulator?
@@ -263,6 +265,30 @@ final class AppModel {
             }
             lastWorktreeScan = Date()
             scanningWorktrees = false
+        }
+    }
+
+    /// Removes one worktree's node_modules after the user confirmed it. Every safety check runs again first.
+    func removeNodeModules(_ info: WorktreeInfo) {
+        guard !removingNodeModules.contains(info.path) else { return }
+        removingNodeModules.insert(info.path)
+        let cleanup = NodeModulesCleanup(paths: paths, mode: effectiveMode)
+        let reinstall = NodeModulesCleanup.reinstallCommand(in: info.path)
+        let place = info.path.abbreviatingHome(paths.home)
+        Task {
+            let result = await Task.detached(priority: .userInitiated) { await cleanup.remove(info) }.value
+            removingNodeModules.remove(info.path)
+            lastNodeModulesResult = result
+            let deleted = result.succeeded && result.mode == .live
+            record(HistoryEntry(
+                action: "Remove node_modules: \(info.repository) (\(info.branch ?? "detached"))",
+                detail: "\(result.message) \(place)/node_modules",
+                bytes: result.succeeded ? result.bytes : 0,
+                dryRun: result.mode == .dryRun, succeeded: result.succeeded,
+                undo: deleted ? "Run `\(reinstall)` in \(place) to install it again." : "Nothing was deleted."))
+            if deleted, let index = worktrees.firstIndex(where: { $0.path == info.path }) {
+                worktrees[index].nodeModulesBytes = nil
+            }
         }
     }
 

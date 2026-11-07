@@ -6,6 +6,9 @@ Downloads are on the [releases page](https://github.com/medaimane/headroom/relea
 
 ## [Unreleased]
 
+### Added
+- **Remove node_modules from old worktrees:** on the Worktrees page, remove a worktree's `node_modules` with one confirmation each, only when the worktree is clean and pushed, git ignores the folder, and nothing is running from it. Everything is checked again right before removal, and History says how to reinstall. `headroom-cli node-modules` shows which pass the checks, without removing anything.
+
 ## [0.1.1] - 2026-11-07
 
 ### Added

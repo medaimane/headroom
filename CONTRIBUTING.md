@@ -57,7 +57,7 @@ These are the promises Headroom makes to its users. A change that weakens one wo
 
 1. **Nothing is deleted without the user's click**, and nothing is deleted automatically or on a schedule.
 2. **Only allow-listed locations are cleaned.** Every removal goes through `PathGuard`, both when the plan is made and right before removal.
-3. **Never touch the user's work:** git working trees, uncommitted changes, `.env*.local` files, or worktrees with unpushed commits.
+3. **Never touch the user's work:** code in git working trees, uncommitted changes, `.env*.local` files, or worktrees with unpushed commits. The single exception is `NodeModulesCleanup`: an ignored `node_modules` in a clean, pushed worktree with nothing running from it, after confirmation. Don't widen it without discussing it in an issue first.
 4. **Never stop a process** (agent sessions, simulators, emulators, dev servers) without the user's confirmation.
 5. **Never read or show the contents** of logs, env files or configs. Show sizes and locations only. Process command lines may be used to recognise a tool but are never stored or shown.
 6. **No network calls and no telemetry.** Any future network feature has to be opt-in and visible.
