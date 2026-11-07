@@ -63,12 +63,18 @@ struct MenuBarView: View {
                 }
                 .keyboardShortcut("o")
                 Spacer()
+                Button { AppInfo.showAboutPanel() } label: { Image(systemName: "info.circle") }
+                    .help("About Headroom")
+                    .accessibilityLabel("About Headroom")
                 Button {
                     openSettings()
                     NSApp.activate()
                 } label: { Image(systemName: "gearshape") }
                 .help("Settings")
-                Button("Quit") { NSApp.terminate(nil) }
+                Button("Quit") {
+                    model.flushSettingsHistory()
+                    NSApp.terminate(nil)
+                }
             }
         }
         .padding(14)
