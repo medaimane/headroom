@@ -68,7 +68,10 @@ struct MenuBarView: View {
                     NSApp.activate()
                 } label: { Image(systemName: "gearshape") }
                 .help("Settings")
-                Button("Quit") { NSApp.terminate(nil) }
+                Button("Quit") {
+                    model.flushSettingsHistory()
+                    NSApp.terminate(nil)
+                }
             }
         }
         .padding(14)

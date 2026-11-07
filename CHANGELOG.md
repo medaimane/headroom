@@ -6,6 +6,9 @@ Downloads are on the [releases page](https://github.com/medaimane/headroom/relea
 
 ## [Unreleased]
 
+### Fixed
+- **History now records settings changes,** as it says it does. Turning dry run on or off is recorded straight away; other settings are recorded once you stop adjusting them, as one entry like "Disk warning: 60 GB → 85 GB" with how to set it back.
+
 ## [0.1.0] - 2026-11-07
 
 The first public release.
