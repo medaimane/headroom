@@ -6,6 +6,8 @@ Downloads are on the [releases page](https://github.com/medaimane/headroom/relea
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-07
+
 ### Added
 - **About Headroom:** the version, with links to the website, guide, changelog and bug reports. Open it from the ⓘ button in the menu bar panel or from Settings, which now also shows the version.
 
@@ -32,5 +34,6 @@ The first public release.
 - **`headroom-cli`:** read-only reports for health, processes, storage, devices, worktrees and a dry-run plan.
 - A universal download (Apple silicon and Intel), plus a website and guide.
 
-[Unreleased]: https://github.com/medaimane/headroom/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/medaimane/headroom/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/medaimane/headroom/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/medaimane/headroom/releases/tag/v0.1.0
