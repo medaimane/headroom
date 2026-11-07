@@ -1,0 +1,75 @@
+name: Bug report
+description: Something in Headroom doesn't work as expected.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. **If Headroom deleted or changed something it shouldn't have, or could do so, please report it privately instead:** see [SECURITY.md](https://github.com/medaimane/headroom/blob/main/SECURITY.md).
+
+        Please don't paste logs, env files, configs or anything with personal or patient data. Folder names and sizes are enough.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open Storage
+        2. Select …
+        3. Click Review clean-up…
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Menu bar
+        - Health
+        - Storage and clean-up
+        - Simulators and devices
+        - Explore
+        - Worktrees
+        - Workload snapshots
+        - History
+        - Settings or warnings
+        - headroom-cli
+        - Website or guide
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Headroom version
+      description: Shown in the app's About window, or the release you downloaded.
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How did you install it?
+      options:
+        - Downloaded Headroom.zip
+        - Built from source
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version and Mac
+      placeholder: "macOS 15.2, MacBook Pro M3 Pro"
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Screenshots or `headroom-cli` output help, as long as they contain no private data.

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security or safety problem
+    url: https://github.com/medaimane/headroom/security/advisories/new
+    about: If Headroom could delete, change or reveal something it shouldn't, report it privately here.
+  - name: Read the guide
+    url: https://medaimane.github.io/headroom/guide/
+    about: Install steps, first launch of a download, every feature and the FAQ.

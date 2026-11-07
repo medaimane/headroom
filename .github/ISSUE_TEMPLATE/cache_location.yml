@@ -1,0 +1,41 @@
+name: New cache location
+description: Suggest a developer cache Headroom should know about.
+labels: ["cache-location"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Headroom only cleans caches that their tool **rebuilds by itself**. Please don't suggest folders that hold settings, credentials, user data or state.
+  - type: input
+    id: tool
+    attributes:
+      label: Tool
+      placeholder: "Bun"
+    validations:
+      required: true
+  - type: input
+    id: path
+    attributes:
+      label: Location
+      description: Relative to your home folder, or a $TMPDIR prefix.
+      placeholder: "~/.bun/install/cache"
+    validations:
+      required: true
+  - type: textarea
+    id: rebuild
+    attributes:
+      label: What happens after it's removed?
+      description: How the tool rebuilds it, and what it costs (a slower first build, a re-download, …). A link to the tool's docs helps.
+    validations:
+      required: true
+  - type: input
+    id: blocking
+    attributes:
+      label: Processes that use it
+      description: Headroom skips the cache while these run.
+      placeholder: "bun"
+  - type: input
+    id: size
+    attributes:
+      label: Typical size on your Mac
+      placeholder: "3 GB"

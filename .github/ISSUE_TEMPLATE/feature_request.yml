@@ -1,0 +1,30 @@
+name: Feature request
+description: Suggest an improvement or a new feature.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Headroom stays small and careful: it reports freely, and changes nothing without the user's review and click. Ideas that keep to those rules are the easiest to accept.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe your situation, for example the tools you run and what slows your Mac down.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like Headroom to do?
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Does it change or delete anything?
+      description: If so, what should the user see before confirming, and how would they undo it?
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you've tried

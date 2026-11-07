@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Build and test
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Build
+        run: swift build
+
+      - name: Test
+        # Clean-up tests only touch fixture folders in $TMPDIR.
+        run: swift test
+
+      - name: Build the app bundle (release)
+        run: make app
+
+  site:
+    name: Website version label
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Site shows the app version
+        run: |
+          version=$(sed -n '/CFBundleShortVersionString/{n;s/.*<string>\(.*\)<\/string>.*/\1/p;}' Resources/Info.plist)
+          echo "App version: $version"
+          for page in docs/index.html docs/guide/index.html; do
+            grep -q "data-version=\"$version\"" "$page" || { echo "::error file=$page::Doesn't show version $version"; exit 1; }
+          done
+          grep -q "^## \[$version\]" CHANGELOG.md || { echo "::error file=CHANGELOG.md::No section for $version"; exit 1; }

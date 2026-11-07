@@ -4,6 +4,8 @@
 
 A small macOS menu bar app that keeps a developer's Mac fast: it shows what's filling the disk and using memory, cleans rebuildable dev caches safely, and measures how much you can run at once (simulators, emulators, dev servers, agent sessions).
 
+[![CI](https://github.com/medaimane/headroom/actions/workflows/ci.yml/badge.svg)](https://github.com/medaimane/headroom/actions/workflows/ci.yml)
+
 Native SwiftUI, no dependencies, no network, no telemetry. It uses about 20 MB of memory.
 
 **Website and guide:** [medaimane.github.io/headroom](https://medaimane.github.io/headroom/) (source in [`docs/`](docs/)).
@@ -93,6 +95,10 @@ scripts/               app bundle and icon build scripts
 6. Scheduled weekly checks.
 7. Device and build tuning (AVD RAM and cores, Gradle JVM, Metro and watchman) with backups.
 8. node_modules clean-up for merged, clean, pushed worktrees.
+
+## Contributing
+
+Bug reports, cache locations and fixes are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md): setup, the safety rules every change must keep, and how to send a pull request. Please follow the [code of conduct](CODE_OF_CONDUCT.md), and report security or safety problems privately as described in [SECURITY.md](SECURITY.md).
 
 ## Changelog
 
